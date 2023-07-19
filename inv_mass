@@ -20,7 +20,7 @@ Bank  gen = new Bank(reader.getSchemaFactory().getSchema("MC::Particle"));
 Bank  particles = new Bank(reader.getSchemaFactory().getSchema("REC::Particle"));
 //----------------------------------------------------------------------
 // Creat TCanvas.
-TCanvas W = new TCanvas("W",800,400);
+TCanvas W = new TCanvas("W",800,800);
 //----------------------------------------------------------------------
 // Create histograms.
 H1F  hOmega_Inv = new H1F("hOmega_Inv" ,100, 0.0, 3.0);
@@ -32,8 +32,10 @@ hPi0_Inv.setTitle("Invariant Mass #pi 0");
 H1F  hOmega_Inv_alternate = new H1F("hOmega_Inv_alternate" ,100, 0.0, 3.0);
 hOmega_Inv_alternate.setTitleX("Inv Mass [GeV/c^2]");
 hOmega_Inv_alternate.setTitle("Invariant Mass #omega Alternate");
+H1F  hPis_Inv = new H1F("hPis_Inv" ,100, 0.0, 2.0);
+hPis_Inv.setTitleX("Inv Mass [GeV/c^2]");
+hPis_Inv.setTitle("Invariant Mass #pi + #pi -");
 //----------------------------------------------------------------------
-EventFilter  Pi0_filter = new EventFilter("11:22:22:X+:X-:Xn");
 EventFilter  Omega_filter = new EventFilter("11:22:22:211:-211:X+:X-:Xn");
 reader.getEvent(event,0);  
 while(reader.hasNext()==true){ 
@@ -48,12 +50,13 @@ while(reader.hasNext()==true){
      LorentzVector vPiminus = physEvent.getParticle("[-211]").vector();
      Particle Pi0 = physEvent.getParticle("[22,0]+[22,1]");
      LorentzVector vPi0 = physEvent.getParticle("[22,0]+[22,1]").vector();
+     Particle Piplusminus = physEvent.getParticle("[-211] + [211]");
+     LorentzVector vPiplusminus = physEvent.getParticle("[-211] + [211]").vector();
 
-     if(Pi0_filter.isValid(physEvent)==true){
-     hPi0_Inv.fill(Pi0.mass());
-}
      if(Omega_filter.isValid(physEvent)==true){
-     if(Pi0.mass()>0.1&&Pi0.mass()<0.2){
+     hPi0_Inv.fill(Pi0.mass()); 
+     hPis_Inv.fill(Piplusminus.mass());
+     if(Pi0.mass()>0.1&&Pi0.mass()<0.2){ //&&Piplusminus.mass()>=.8
      hOmega_Inv.fill(Omega.mass());
      vPi0.add(vPiplus);  
      vPi0.add(vPiminus);
@@ -64,7 +67,8 @@ while(reader.hasNext()==true){
 
 //----------------------------------------------------------------------
 // Divide TCanvases and draw histograms in them.
-W.divide(3,1);
+W.divide(2,2);
 W.cd(0).draw(hPi0_Inv);
 W.cd(1).draw(hOmega_Inv);
 W.cd(2).draw(hOmega_Inv_alternate);
+W.cd(3).draw(hPis_Inv);
