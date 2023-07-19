@@ -25,7 +25,7 @@ TCanvas W = new TCanvas("W",800,400);
 // Create histograms.
 H1F  hOmega_Inv = new H1F("hOmega_Inv" ,100, 0.1, 4.0);
 hOmega_Inv.setTitleX("Inv Mass [GeV/c^2]");
-hOmega_Inv.setTitle("Invariant Mass #Omega");
+hOmega_Inv.setTitle("Invariant Mass #omega");
 H1F  hPi0_Inv = new H1F("hPi0_Inv" ,100, 0.1, 2.0);
 hPi0_Inv.setTitleX("Inv Mass [GeV/c^2]");
 hPi0_Inv.setTitle("Invariant Mass #pi 0");
