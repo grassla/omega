@@ -1,0 +1,64 @@
+// Import Libraries
+import org.jlab.jnp.hipo4.io.*;
+import org.jlab.jnp.hipo4.data.*;
+import org.jlab.groot.data.*;
+import org.jlab.groot.graphics.*;
+import org.jlab.groot.math.*;
+import org.jlab.groot.ui.*;
+import org.jlab.clas.physics.*;
+import org.jlab.clas.physics.LorentzVector;
+import org.jlab.clas.physics.PhysicsEvent;
+import org.jlab.clas.physics.Particle;
+import org.jlab.clas.physics.EventFilter;
+import org.jlab.physics.io.DataManager;
+//---------------------------------------------------------------------
+// Create HipoReader object and load in file. Create event class and bank instance.
+HipoReader reader = new HipoReader();
+reader.open("/home/grassla/SimOuts.hipo");
+Event 	event = new Event();
+Bank  gen = new Bank(reader.getSchemaFactory().getSchema("MC::Particle"));
+Bank  particles = new Bank(reader.getSchemaFactory().getSchema("REC::Particle"));
+//----------------------------------------------------------------------
+// Creat TCanvas.
+TCanvas W = new TCanvas("W",800,400);
+//----------------------------------------------------------------------
+// Create histograms.
+H1F  hOmega_Inv = new H1F("hOmega_Inv" ,100, 0.1, 4.0);
+hOmega_Inv.setTitleX("Inv Mass [GeV/c^2]");
+hOmega_Inv.setTitle("Invariant Mass #Omega");
+H1F  hPi0_Inv = new H1F("hPi0_Inv" ,100, 0.1, 2.0);
+hPi0_Inv.setTitleX("Inv Mass [GeV/c^2]");
+hPi0_Inv.setTitle("Invariant Mass #pi 0");
+//----------------------------------------------------------------------
+EventFilter  Pi0_filter = new EventFilter("11:22:22:X+:X-:Xn");
+EventFilter  Omega_filter = new EventFilter("11:22:22:211:-211:X+:X-:Xn");
+reader.getEvent(event,0);  
+while(reader.hasNext()==true){ 
+     reader.nextEvent(event);
+     event.read(particles);
+     PhysicsEvent physEvent = DataManager.getPhysicsEvent(10.6,particles);
+   //  Particle Piplus = physEvent.getParticle("[211]");
+   //  LorentzVector vPiplus = physEvent.getParticle("[211]").vector();
+   //  Particle Piminus = physEvent.getParticle("[-211]");
+   //  LorentzVector vPiminus = physEvent.getParticle("[-211]").vector();
+
+     if(Pi0_filter.isValid(physEvent)==true){
+     Particle Pi0 = physEvent.getParticle("[22,0]+[22,1]");
+   //  LorentzVector vPi0 = physEvent.getParticle("[22,0]+[22,1]").vector();
+     hPi0_Inv.fill(Pi0.mass());
+}
+     if(Omega_filter.isValid(physEvent)==true){
+     Particle Omega = physEvent.getParticle("[22,0]+[22,1]+[211]+[-211]");
+   //  LorentzVector vOmega = physEvent.getParticle("[22,0]+[22,1]+[211]+[-211]").vector();
+     hOmega_Inv.fill(Omega.mass());
+   //  vPi0.add(vPiplus);  
+   //  vPi0.add(vPiminus);
+   //  hOmega_Inv.fill(vPi0.mass());
+}
+}
+
+//----------------------------------------------------------------------
+// Divide TCanvases and draw histograms in them.
+W.divide(2,1);
+W.cd(0).draw(hPi0_Inv);
+W.cd(1).draw(hOmega_Inv);
