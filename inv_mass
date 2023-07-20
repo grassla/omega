@@ -22,6 +22,7 @@ Bank  particles = new Bank(reader.getSchemaFactory().getSchema("REC::Particle"))
 // Creat TCanvas.
 TCanvas W = new TCanvas("W",800,800);
 TCanvas Angles = new TCanvas("Angles",800,800);
+TCanvas Dalitz = new TCanvas("Dalitz",400,400);
 //----------------------------------------------------------------------
 // Create histograms.
 H1F  hOmega_Inv = new H1F("hOmega_Inv" ,100, 0.0, 3.0);
@@ -36,20 +37,24 @@ hOmega_Inv_alternate.setTitle("Invariant Mass #omega Alternate");
 H1F  hPis_Inv = new H1F("hPis_Inv" ,100, 0.0, 2.0);
 hPis_Inv.setTitleX("Inv Mass [GeV/c^2]");
 hPis_Inv.setTitle("Invariant Mass #pi + #pi -");
-H1F  htheta0 = new H1F("htheta0" ,100, 0, 1.0);
+H1F  htheta0 = new H1F("htheta0" ,100, 0, 90);
 htheta0.setTitleX("#Theta [Degrees]");
 htheta0.setTitle("Theta 0");
-H1F  htheta1 = new H1F("htheta1" ,100, 0, 1.0);
+H1F  htheta1 = new H1F("htheta1" ,100, 0, 90);
 htheta1.setTitleX("#Theta [Degrees]");
 htheta1.setTitle("Theta 1");
-H2F hPi0vtheta0 = new H2F ("hPi0vtheta0", 100, 0, 1.0, 100, 0, 1.0);
+H2F hPi0vtheta0 = new H2F ("hPi0vtheta0", 100, 0, 1.0, 100, 0, 90);
 hPi0vtheta0.setTitleX("#pi 0 Inv Mass [GeV/c^2]");
 hPi0vtheta0.setTitleY("#theta [Degrees]");
 hPi0vtheta0.setTitle("#pi 0 Invariant Mass v #theta (0)");
-H2F hPi0vtheta1 = new H2F ("hPi0vtheta1", 100, 0, 1.0, 100, 0, 1.0);
+H2F hPi0vtheta1 = new H2F ("hPi0vtheta1", 100, 0, 1.0, 100, 0, 90);
 hPi0vtheta1.setTitleX("#pi 0 Inv Mass [GeV/c^2]");
 hPi0vtheta1.setTitleY("#theta [Degrees]");
 hPi0vtheta1.setTitle("#pi 0 Invariant Mass v #theta (1)");
+H2F hDalitz = new H2F ("hDalitz", 100, 0, 7.0, 100, 0, 7.0);
+hDalitz.setTitleX("Inv Mass (#pi + #pi -) [GeV/c^2]");
+hDalitz.setTitleY("Inv Mass (#pi + #pi 0) [GeV/c^2]");
+hDalitz.setTitle("#omega Dalitz Plot #pi + #pi - #pi 0 Decay Method");
 //----------------------------------------------------------------------
 // Variables.
 double angle0 = 0;
@@ -70,30 +75,39 @@ while(reader.hasNext()==true){
      Particle Pi0 = physEvent.getParticle("[22,0]+[22,1]");
      LorentzVector vPi0 = physEvent.getParticle("[22,0]+[22,1]").vector();
      Particle Piplusminus = physEvent.getParticle("[-211] + [211]");
-     LorentzVector vPiplusminus = physEvent.getParticle("[-211] + [211]").vector();
+     LorentzVector vPiplusminus = physEvent.getParticle("[211] + [-211]").vector();
+     Particle Dalitzplusminus = physEvent.getParticle("[211] + [-211]");
+     Particle Dalitzpluszero = physEvent.getParticle("[211] + [22,0] + [22,1]");
+     
      Particle gamma_0 = physEvent.getParticle("[22,0]");
      Particle gamma_1 = physEvent.getParticle("[22,1]");
      LorentzVector vgamma_0 = physEvent.getParticle("[22,0]").vector();
      LorentzVector vgamma_1 = physEvent.getParticle("[22,1]").vector();
      Vector3 v3gamma_0 = vgamma_0.vect();
      Vector3 v3gamma_1 = vgamma_1.vect();
-     LorentzVector vbeamelectron = physEvent.beamParticle().vector();
-     Vector3 v3beamelectron = vbeamelectron.vect();
+     // LorentzVector vbeamelectron = physEvent.beamParticle().vector();
+     // Vector3 v3beamelectron = vbeamelectron.vect();
+     Particle scatterede = physEvent.getParticle("[11,0]");
+     LorentzVector vscatterede = physEvent.getParticle("[11,0]").vector();
+     Vector3 v3scatterede = vscatterede.vect();
+
 
      if(Omega_filter.isValid(physEvent)==true){
      hPi0_Inv.fill(Pi0.mass()); 
      hPis_Inv.fill(Piplusminus.mass());
-     // double angle0 = Math.acos(v3beamelectron.dot(v3gamma_0)/v3beamelectron.mag()*v3gamma_0.mag());
-     htheta0.fill(vgamma_0.theta());
-     // double angle1 = Math.acos(v3beamelectron.dot(v3gamma_1)/v3beamelectron.mag()*v3gamma_0.mag());
-     htheta1.fill(vgamma_1.theta());
-     hPi0vtheta0.fill(Pi0.mass(), vgamma_0.theta());
-     hPi0vtheta1.fill(Pi0.mass(), vgamma_1.theta());
+     double angle0 = Math.acos(v3scatterede.dot(v3gamma_0)/v3scatterede.mag()*v3gamma_0.mag());
+     htheta0.fill(Math.toDegrees(angle0));
+     double angle1 = Math.acos(v3scatterede.dot(v3gamma_1)/v3scatterede.mag()*v3gamma_1.mag());
+     htheta1.fill(Math.toDegrees(angle1));
+     hPi0vtheta0.fill(Pi0.mass(), Math.toDegrees(angle0));
+     hPi0vtheta1.fill(Pi0.mass(), Math.toDegrees(angle1));
+     hDalitz.fill(Dalitzplusminus.mass2(), Dalitzpluszero.mass2());
      if(Pi0.mass()>0.1&&Pi0.mass()<0.2){ //&&Piplusminus.mass()>=.8
      hOmega_Inv.fill(Omega.mass());
      vPi0.add(vPiplus);  
      vPi0.add(vPiminus);
      hOmega_Inv_alternate.fill(vPi0.mass());
+
 }
 }
 }
@@ -110,3 +124,5 @@ Angles.cd(0).draw(htheta0);
 Angles.cd(1).draw(htheta1);
 Angles.cd(2).draw(hPi0vtheta0);
 Angles.cd(3).draw(hPi0vtheta1);
+Dalitz.divide(1,1);
+Dalitz.cd(0).draw(hDalitz);
