@@ -21,7 +21,7 @@ Bank  particles = new Bank(reader.getSchemaFactory().getSchema("REC::Particle"))
 //----------------------------------------------------------------------
 // Creat TCanvas.
 TCanvas W = new TCanvas("W",800,800);
-TCanvas Angles = new TCanvas("Angles",800,400);
+TCanvas Angles = new TCanvas("Angles",800,800);
 //----------------------------------------------------------------------
 // Create histograms.
 H1F  hOmega_Inv = new H1F("hOmega_Inv" ,100, 0.0, 3.0);
@@ -36,12 +36,20 @@ hOmega_Inv_alternate.setTitle("Invariant Mass #omega Alternate");
 H1F  hPis_Inv = new H1F("hPis_Inv" ,100, 0.0, 2.0);
 hPis_Inv.setTitleX("Inv Mass [GeV/c^2]");
 hPis_Inv.setTitle("Invariant Mass #pi + #pi -");
-H1F  htheta0 = new H1F("htheta0" ,90, -180, 180);
+H1F  htheta0 = new H1F("htheta0" ,100, 0, 1.0);
 htheta0.setTitleX("#Theta [Degrees]");
 htheta0.setTitle("Theta 0");
-H1F  htheta1 = new H1F("htheta1" ,90, -180, 180);
+H1F  htheta1 = new H1F("htheta1" ,100, 0, 1.0);
 htheta1.setTitleX("#Theta [Degrees]");
 htheta1.setTitle("Theta 1");
+H2F hPi0vtheta0 = new H2F ("hPi0vtheta0", 100, 0, 1.0, 100, 0, 1.0);
+hPi0vtheta0.setTitleX("#pi 0 Inv Mass [GeV/c^2]");
+hPi0vtheta0.setTitleY("#theta [Degrees]");
+hPi0vtheta0.setTitle("#pi 0 Invariant Mass v #theta (0)");
+H2F hPi0vtheta1 = new H2F ("hPi0vtheta1", 100, 0, 1.0, 100, 0, 1.0);
+hPi0vtheta1.setTitleX("#pi 0 Inv Mass [GeV/c^2]");
+hPi0vtheta1.setTitleY("#theta [Degrees]");
+hPi0vtheta1.setTitle("#pi 0 Invariant Mass v #theta (1)");
 //----------------------------------------------------------------------
 // Variables.
 double angle0 = 0;
@@ -79,6 +87,8 @@ while(reader.hasNext()==true){
      htheta0.fill(vgamma_0.theta());
      // double angle1 = Math.acos(v3beamelectron.dot(v3gamma_1)/v3beamelectron.mag()*v3gamma_0.mag());
      htheta1.fill(vgamma_1.theta());
+     hPi0vtheta0.fill(Pi0.mass(), vgamma_0.theta());
+     hPi0vtheta1.fill(Pi0.mass(), vgamma_1.theta());
      if(Pi0.mass()>0.1&&Pi0.mass()<0.2){ //&&Piplusminus.mass()>=.8
      hOmega_Inv.fill(Omega.mass());
      vPi0.add(vPiplus);  
@@ -95,6 +105,8 @@ W.cd(0).draw(hPi0_Inv);
 W.cd(1).draw(hOmega_Inv);
 W.cd(2).draw(hOmega_Inv_alternate);
 W.cd(3).draw(hPis_Inv);
-Angles.divide(2,1);
+Angles.divide(2,2);
 Angles.cd(0).draw(htheta0);
 Angles.cd(1).draw(htheta1);
+Angles.cd(2).draw(hPi0vtheta0);
+Angles.cd(3).draw(hPi0vtheta1);
