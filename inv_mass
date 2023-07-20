@@ -51,7 +51,7 @@ H2F hPi0vtheta1 = new H2F ("hPi0vtheta1", 100, 0, 1.0, 100, 0, 90);
 hPi0vtheta1.setTitleX("#pi 0 Inv Mass [GeV/c^2]");
 hPi0vtheta1.setTitleY("#theta [Degrees]");
 hPi0vtheta1.setTitle("#pi 0 Invariant Mass v #theta (1)");
-H2F hDalitz = new H2F ("hDalitz", 100, 0, 7.0, 100, 0, 7.0);
+H2F hDalitz = new H2F ("hDalitz", 100, 0, 3.0, 100, 0, 3.0);
 hDalitz.setTitleX("Inv Mass (#pi + #pi -) [GeV/c^2]");
 hDalitz.setTitleY("Inv Mass (#pi + #pi 0) [GeV/c^2]");
 hDalitz.setTitle("#omega Dalitz Plot #pi + #pi - #pi 0 Decay Method");
