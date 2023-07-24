@@ -23,13 +23,16 @@ Bank  mclund = new Bank(reader.getSchemaFactory().getSchema("MC::Lund"));
 // H1F  hd = new H1F("hd" ,100, 0.0, 100);
 //----------------------------------------------------------------------
 // Variables.
+int omega_parent_count = 0;
 int omega_count = 0;
+int count = 0;
 int i = 0;
 int j = 0;
 int k = 0;
 int pospion = 0;
 int negpion = 0;
 int pizero = 0;
+int omega_parent = 0;
 //----------------------------------------------------------------------
 reader.getEvent(event,0);  
 while(reader.hasNext()==true){ 
@@ -39,13 +42,16 @@ List<Integer> pizeroList = new ArrayList<>();
 while(reader.hasNext()==true){
       pospionList.clear();
       negpionList.clear();
-      pizeroList.clear();
+      pizeroList.clear(); 
       reader.nextEvent(event);
       event.read(mclund);
       if(mclund.getRows()>4){ 
           for(int row = 0; row < mclund.getRows(); row++){
               int pid = mclund.getInt("pid",row);
-              
+              count = 0;
+              if(pid==223) { 
+              count++;
+              omega_count = omega_count + count; }
               if(pid==211) {
                 pospion++;              
                 pospionList.add(row); }
@@ -67,9 +73,11 @@ while(reader.hasNext()==true){
                 int negparentpid = mclund.getInt("pid",negpionparent-1);
                 int pizeroparentpid = mclund.getInt("pid",pizeroparent-1);
 
-                
-                if((posparentpid==223)&&(negparentpid==223)&&(pizeroparentpid==223)) {
-                  omega_count++;
+               omega_parent = 0;
+                if((posparentpid==negparentpid)&&(negparentpid==pizeroparentpid)) {
+                  if(posparentpid==223) {
+                  omega_parent++; 
+                  omega_parent_count = omega_parent_count + omega_parent; }
      }
 } 
 }
@@ -77,4 +85,7 @@ while(reader.hasNext()==true){
 }
 }
 }
-System.out.println("Omega parents: " + omega_count);
+System.out.println("Omega total: " + omega_count);
+System.out.println("Omega parents: " + omega_parent_count);
+System.out.println("parent reset: " + omega_parent);
+System.out.println("gen reset: " + count);
