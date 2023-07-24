@@ -1,0 +1,80 @@
+// Import Libraries
+import org.jlab.jnp.hipo4.io.*;
+import org.jlab.jnp.hipo4.data.*;
+import org.jlab.groot.data.*;
+import org.jlab.groot.graphics.*;
+import org.jlab.groot.math.*;
+import org.jlab.groot.ui.*;
+import org.jlab.clas.physics.*;
+import org.jlab.clas.physics.LorentzVector;
+import org.jlab.clas.physics.PhysicsEvent;
+import org.jlab.clas.physics.Particle;
+//---------------------------------------------------------------------
+// Create HipoReader object and load in file. Create event class and bank instance.
+HipoReader reader = new HipoReader();
+reader.open("/home/grassla/SimOuts.hipo");
+Event 	event = new Event();
+Bank  mclund = new Bank(reader.getSchemaFactory().getSchema("MC::Lund"));
+//----------------------------------------------------------------------
+// Creat TCanvas.
+// TCanvas a = new TCanvas("a",800,800);
+//----------------------------------------------------------------------
+// Create histograms.
+// H1F  hd = new H1F("hd" ,100, 0.0, 100);
+//----------------------------------------------------------------------
+// Variables.
+int omega_count = 0;
+int i = 0;
+int j = 0;
+int k = 0;
+int pospion = 0;
+int negpion = 0;
+int pizero = 0;
+//----------------------------------------------------------------------
+reader.getEvent(event,0);  
+while(reader.hasNext()==true){ 
+List<Integer> pospionList = new ArrayList<>();
+List<Integer> negpionList = new ArrayList<>();
+List<Integer> pizeroList = new ArrayList<>();
+while(reader.hasNext()==true){
+      pospionList.clear();
+      negpionList.clear();
+      pizeroList.clear();
+      reader.nextEvent(event);
+      event.read(mclund);
+      if(mclund.getRows()>4){ 
+          for(int row = 0; row < mclund.getRows(); row++){
+              int pid = mclund.getInt("pid",row);
+              
+              if(pid==211) {
+                pospion++;              
+                pospionList.add(row); }
+              if(pid==-211) {
+                negpion++;
+                negpionList.add(row); }
+              if(pid==111) {
+                pizero++;
+                pizeroList.add(row); }
+            }
+
+            for(i=0; i<pospionList.size(); i++) {
+              for(j=0; j<negpionList.size(); j++) {
+               for(k=0; k<pizeroList.size(); k++) {
+                byte pospionparent = mclund.getByte("parent",pospionList.get(i));
+                byte negpionparent = mclund.getByte("parent",negpionList.get(j));
+                byte pizeroparent = mclund.getByte("parent",pizeroList.get(k));
+                int posparentpid = mclund.getInt("pid",pospionparent-1);
+                int negparentpid = mclund.getInt("pid",negpionparent-1);
+                int pizeroparentpid = mclund.getInt("pid",pizeroparent-1);
+
+                
+                if((posparentpid==223)&&(negparentpid==223)&&(pizeroparentpid==223)) {
+                  omega_count++;
+     }
+} 
+}
+}
+}
+}
+}
+System.out.println("Omega parents: " + omega_count);
