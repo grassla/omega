@@ -82,8 +82,9 @@ while(reader.hasNext()==true){
                rho_parent_pairs = 0;
                 if((posparentpid==negparentpid)&&(negparentpid==pizeroparentpid)) {
                   if(posparentpid==223) {
-                  omega_parent++; 
-                  omega_parent_count = omega_parent_count + omega_parent; }
+                  //omega_parent++; 
+                  //omega_parent_count = omega_parent_count + omega_parent; //}
+                  omega_parent_count++; }
                   if(posparentpid==113) {
                   rho_parent++;
                   rho_parent_count = rho_parent_count + rho_parent;  }
