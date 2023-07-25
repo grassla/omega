@@ -1,0 +1,59 @@
+// Import Libraries
+import org.jlab.jnp.hipo4.io.*;
+import org.jlab.jnp.hipo4.data.*;
+import org.jlab.groot.data.*;
+import org.jlab.groot.graphics.*;
+import org.jlab.groot.math.*;
+import org.jlab.groot.ui.*;
+import org.jlab.clas.physics.*;
+import org.jlab.clas.physics.LorentzVector;
+import org.jlab.clas.physics.PhysicsEvent;
+import org.jlab.clas.physics.Particle;
+//---------------------------------------------------------------------
+// Create HipoReader object and load in file. Create event class and bank instance.
+HipoReader reader = new HipoReader();
+reader.open("/home/grassla/SimOuts.hipo");
+Event 	event = new Event();
+Bank  mclund = new Bank(reader.getSchemaFactory().getSchema("MC::Lund"));
+//----------------------------------------------------------------------
+// Variables.
+int omega_count = 0;
+int count = 0;
+int i = 0;
+//----------------------------------------------------------------------
+// Create histograms.
+H1F  hdaughters = new H1F("hdaughters" ,100, -500, 500);
+// Create TCanvases.
+TCanvas a = new TCanvas("a",800,800);
+//----------------------------------------------------------------------
+reader.getEvent(event,0);  
+while(reader.hasNext()==true){ 
+List<Integer> omegaList = new ArrayList<>();
+while(reader.hasNext()==true){
+      omegaList.clear();
+      reader.nextEvent(event);
+      event.read(mclund);
+      if(mclund.getRows()>4){ 
+          for(int row = 0; row < mclund.getRows(); row++){
+              int pid = mclund.getInt("pid",row);
+              count = 0;
+              if(pid==223) { 
+              count++;
+              omega_count = omega_count + count;
+              omegaList.add(row); }
+            
+            for(i=0; i<omegaList.size(); i++) {
+                byte omegadaughter = mclund.getByte("daughter",omegaList.get(i));
+                int omegadaughterpid = mclund.getInt("pid",omegadaughter-1);
+
+                if(pid==223) {
+                  hdaughters.fill(omegadaughterpid); }
+     
+}
+} 
+}
+}
+}
+
+a.divide(1,1);
+a.cd(0).draw(hdaughters);
