@@ -27,6 +27,12 @@ int pospion = 0;
 int negpion = 0;
 int pizero = 0;
 int omega_parent = 0;
+int rho_parent = 0;
+int rho_parent_count = 0;
+int count0 = 0;
+int rho_count = 0;
+int rho_parent_pairs = 0;
+int rho_parent_pairs_count = 0;
 //----------------------------------------------------------------------
 reader.getEvent(event,0);  
 while(reader.hasNext()==true){ 
@@ -43,9 +49,13 @@ while(reader.hasNext()==true){
           for(int row = 0; row < mclund.getRows(); row++){
               int pid = mclund.getInt("pid",row);
               count = 0;
+              count0 = 0;
               if(pid==223) { 
               count++;
               omega_count = omega_count + count; }
+              if(pid==113) {
+              count0++;
+              rho_count = rho_count + count0; }
               if(pid==211) {
                 pospion++;              
                 pospionList.add(row); }
@@ -68,11 +78,22 @@ while(reader.hasNext()==true){
                 int pizeroparentpid = mclund.getInt("pid",pizeroparent-1);
 
                omega_parent = 0;
+               rho_parent = 0;
+               rho_parent_pairs = 0;
                 if((posparentpid==negparentpid)&&(negparentpid==pizeroparentpid)) {
                   if(posparentpid==223) {
                   omega_parent++; 
                   omega_parent_count = omega_parent_count + omega_parent; }
+                  if(posparentpid==113) {
+                  rho_parent++;
+                  rho_parent_count = rho_parent_count + rho_parent;  }
      }
+
+                if(posparentpid==negparentpid) {
+                  if(posparentpid==113) {
+                  rho_parent_pairs++; 
+                  rho_parent_pairs_count = rho_parent_pairs_count + rho_parent_pairs; }
+}
 } 
 }
 }
@@ -81,5 +102,8 @@ while(reader.hasNext()==true){
 }
 System.out.println("Omega total: " + omega_count);
 System.out.println("Omega parents: " + omega_parent_count);
-System.out.println("parent reset: " + omega_parent);
-System.out.println("gen reset: " + count);
+System.out.println("Rho total: " + rho_count);
+System.out.println("Rho parents: " + rho_parent_count);
+System.out.println("Rho parents of pi+pi- pair: " + rho_parent_pairs_count);
+//System.out.println("parent reset: " + omega_parent);
+//System.out.println("gen reset: " + count);
