@@ -16,12 +16,6 @@ reader.open("/home/grassla/SimOuts.hipo");
 Event 	event = new Event();
 Bank  mclund = new Bank(reader.getSchemaFactory().getSchema("MC::Lund"));
 //----------------------------------------------------------------------
-// Creat TCanvas.
-// TCanvas a = new TCanvas("a",800,800);
-//----------------------------------------------------------------------
-// Create histograms.
-// H1F  hd = new H1F("hd" ,100, 0.0, 100);
-//----------------------------------------------------------------------
 // Variables.
 int omega_parent_count = 0;
 int omega_count = 0;
