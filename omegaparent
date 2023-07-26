@@ -16,6 +16,27 @@ reader.open("/home/grassla/SimOuts.hipo");
 Event 	event = new Event();
 Bank  mclund = new Bank(reader.getSchemaFactory().getSchema("MC::Lund"));
 //----------------------------------------------------------------------
+// Create histograms.
+H1F  hinv = new H1F("hinv" ,100, 0, 10.0);
+hinv.setTitleX("Inv Mass [GeV/c^2]");
+hinv.setTitle("Inv Mass #omega");
+H2F hdalitz = new H2F("hdalitz" ,100, 0, 6.0,100, 0, 6.0);
+hdalitz.setTitleX("W^2 plusminus");
+hdalitz.setTitleY("W^2 pluszero");
+hdalitz.setTitle("Dalitz Plot #omega");
+//----------------------------------------------------------------------
+// Create TCanvases.
+TCanvas a = new TCanvas("a",800,800);
+TCanvas b = new TCanvas("b",800,800);
+//----------------------------------------------------------------------
+// Create Lorentz Vectors.
+LorentzVector  vpospion   = new LorentzVector();
+LorentzVector  vnegpion   = new LorentzVector();
+LorentzVector  vpizero   = new LorentzVector();
+LorentzVector  vomega   = new LorentzVector();
+LorentzVector vplusminus = new LorentzVector();
+LorentzVector vpluszero = new LorentzVector();
+//----------------------------------------------------------------------
 // Variables.
 int omega_parent_count = 0;
 int omega_count = 0;
@@ -85,7 +106,37 @@ while(reader.hasNext()==true){
                   if(posparentpid==223) {
                   //omega_parent++; 
                   //omega_parent_count = omega_parent_count + omega_parent; 
-                  omega_parent_count++; }
+                  omega_parent_count++; 
+
+         	vpospion.setPxPyPzM(
+             	mclund.getFloat("px",i),
+              	mclund.getFloat("py",i),
+              	mclund.getFloat("pz",i),
+              	0.13957 );  
+         	vnegpion.setPxPyPzM(
+             	mclund.getFloat("px",j),
+              	mclund.getFloat("py",j),
+              	mclund.getFloat("pz",j),
+              	0.13957 ); 
+         	vpizero.setPxPyPzM(
+             	mclund.getFloat("px",k),
+              	mclund.getFloat("py",k),
+              	mclund.getFloat("pz",k),
+              	0.13498 ); 
+//do energy instead of mass but how??
+            vomega.copy(vpospion);
+            vomega.add(vnegpion);
+            vomega.add(vpizero);
+            hinv.fill(vomega.mass());
+//plot is trash??
+            vplusminus.copy(vpospion);
+            vplusminus.add(vnegpion);
+            vpluszero.copy(vpospion);
+            vpluszero.add(vpizero);
+            hdalitz.fill(vplusminus.mass2(),vpluszero.mass2());
+
+
+}
                   if(posparentpid==113) {
                   rho_parent++;
                   rho_parent_count = rho_parent_count + rho_parent;  }
@@ -111,3 +162,7 @@ System.out.println("Rho parents: " + rho_parent_count);
 System.out.println("Rho parents of pi+pi- pair: " + rho_parent_pairs_count);
 //System.out.println("parent reset: " + omega_parent);
 //System.out.println("gen reset: " + count);
+a.divide(1,1);
+a.cd(0).draw(hinv);
+b.divide(1,1);
+b.cd(0).draw(hdalitz);
