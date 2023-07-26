@@ -93,6 +93,7 @@ while(reader.hasNext()==true){
 
 
      if(Omega_filter.isValid(physEvent)==true){
+     //if((Dalitzplusminus.mass2()<=(0.414*1.4))&&(Dalitzpluszero.mass2()<=(0.419*1.4))) {
      hPi0_Inv.fill(Pi0.mass()); 
      hPis_Inv.fill(Piplusminus.mass());
      double angle0 = Math.acos(v3scatterede.dot(v3gamma_0)/v3scatterede.mag()*v3gamma_0.mag());
@@ -107,10 +108,10 @@ while(reader.hasNext()==true){
      vPi0.add(vPiplus);  
      vPi0.add(vPiminus);
      hOmega_Inv_alternate.fill(vPi0.mass());
-
 }
 }
 }
+//}
 
 //----------------------------------------------------------------------
 // Divide TCanvases and draw histograms in them.
