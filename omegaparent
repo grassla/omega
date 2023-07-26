@@ -35,7 +35,6 @@ int rho_parent_pairs = 0;
 int rho_parent_pairs_count = 0;
 //----------------------------------------------------------------------
 reader.getEvent(event,0);  
-while(reader.hasNext()==true){ 
 List<Integer> pospionList = new ArrayList<>();
 List<Integer> negpionList = new ArrayList<>();
 List<Integer> pizeroList = new ArrayList<>();
@@ -100,7 +99,7 @@ while(reader.hasNext()==true){
 }
 }
 }
-}
+
 System.out.println("Omega total: " + omega_count);
 System.out.println("Omega parents: " + omega_parent_count);
 System.out.println("Rho total: " + rho_count);
