@@ -33,11 +33,13 @@ int count0 = 0;
 int rho_count = 0;
 int rho_parent_pairs = 0;
 int rho_parent_pairs_count = 0;
+int eventcount = 0;
 //----------------------------------------------------------------------
 reader.getEvent(event,0);  
 List<Integer> pospionList = new ArrayList<>();
 List<Integer> negpionList = new ArrayList<>();
 List<Integer> pizeroList = new ArrayList<>();
+List<Integer> omegaList = new ArrayList<>();
 while(reader.hasNext()==true){
       pospionList.clear();
       negpionList.clear();
@@ -79,26 +81,28 @@ while(reader.hasNext()==true){
                omega_parent = 0;
                rho_parent = 0;
                rho_parent_pairs = 0;
-                if((posparentpid==negparentpid)&&(negparentpid==pizeroparentpid)) {
+                if((pospionparent==negpionparent)&&(negpionparent==pizeroparent)&&(pospionparent==pizeroparent)) {
                   if(posparentpid==223) {
                   //omega_parent++; 
-                  //omega_parent_count = omega_parent_count + omega_parent; //}
+                  //omega_parent_count = omega_parent_count + omega_parent; 
                   omega_parent_count++; }
                   if(posparentpid==113) {
                   rho_parent++;
                   rho_parent_count = rho_parent_count + rho_parent;  }
-     }
+}
+     
 
                 if(posparentpid==negparentpid) {
                   if(posparentpid==113) {
                   rho_parent_pairs++; 
                   rho_parent_pairs_count = rho_parent_pairs_count + rho_parent_pairs; }
 }
+}
 } 
 }
 }
 }
-}
+
 
 System.out.println("Omega total: " + omega_count);
 System.out.println("Omega parents: " + omega_parent_count);
