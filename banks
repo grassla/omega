@@ -1,0 +1,108 @@
+// Import Libraries
+import org.jlab.jnp.hipo4.io.*;
+import org.jlab.jnp.hipo4.data.*;
+import org.jlab.groot.data.*;
+import org.jlab.groot.graphics.*;
+import org.jlab.groot.math.*;
+import org.jlab.groot.ui.*;
+import org.jlab.clas.physics.*;
+import org.jlab.clas.physics.LorentzVector;
+import org.jlab.clas.physics.PhysicsEvent;
+import org.jlab.clas.physics.Particle;
+import org.jlab.clas.physics.EventFilter;
+import org.jlab.physics.io.DataManager;
+//---------------------------------------------------------------------
+// Create HipoReader object and load in file. Create event class and bank instance.
+HipoReader reader = new HipoReader();
+reader.open("/home/grassla/SimOuts.hipo");
+Event 	event = new Event();
+Bank  mclund = new Bank(reader.getSchemaFactory().getSchema("MC::Lund"));
+Bank recpart = new Bank(reader.getSchemaFactory().getSchema("REC::Particle"));
+Bank mcpart = new Bank(reader.getSchemaFactory().getSchema("MC::Particle"));
+//----------------------------------------------------------------------
+// Create Lorentz Vectors.
+LorentzVector  vpospion   = new LorentzVector();
+LorentzVector  vnegpion   = new LorentzVector();
+LorentzVector  vpizero   = new LorentzVector();
+LorentzVector  vomega   = new LorentzVector();
+LorentzVector vplusminus = new LorentzVector();
+LorentzVector vpluszero = new LorentzVector();
+//----------------------------------------------------------------------
+// Variables.
+int omega_parent_count = 0;
+int omega_count = 0;
+int count = 0;
+int i = 0;
+int j = 0;
+int k = 0;
+int pospion = 0;
+int negpion = 0;
+int pizero = 0;
+int omega_parent = 0;
+int count0 = 0;
+int eventcount = 0;
+//----------------------------------------------------------------------
+EventFilter  omegafilter = new EventFilter("211:-211:22:22:X+:X-:Xn");
+reader.getEvent(event,0);  
+List<Integer> pospionList = new ArrayList<>();
+List<Integer> negpionList = new ArrayList<>();
+List<Integer> pizeroList = new ArrayList<>();
+List<Integer> omegaList = new ArrayList<>();
+while(reader.hasNext()==true){
+      pospionList.clear();
+      negpionList.clear();
+      pizeroList.clear(); 
+      reader.nextEvent(event);
+      event.read(mclund);
+      //PhysicsEvent physEvent = DataManager.getPhysicsEvent(10.6,particles);
+     // Particle Proton = physEvent.getParticle("2212");
+      if(mclund.getRows()>4){ 
+          for(int row = 0; row < mclund.getRows(); row++){
+              int pid = mclund.getInt("pid",row);
+              count = 0;
+              count0 = 0;
+              if(pid==223) { 
+              count++;
+              omega_count = omega_count + count; }
+              if(pid==113) {
+              count0++;
+              rho_count = rho_count + count0; }
+              if(pid==211) {
+                pospion++;              
+                pospionList.add(row); }
+              if(pid==-211) {
+                negpion++;
+                negpionList.add(row); }
+              if(pid==111) {
+                pizero++;
+                pizeroList.add(row); }
+            }
+
+            for(i=0; i<pospionList.size(); i++) {
+              for(j=0; j<negpionList.size(); j++) {
+               for(k=0; k<pizeroList.size(); k++) {
+                byte pospionparent = mclund.getByte("parent",pospionList.get(i));
+                byte negpionparent = mclund.getByte("parent",negpionList.get(j));
+                byte pizeroparent = mclund.getByte("parent",pizeroList.get(k));
+                int posparentpid = mclund.getInt("pid",pospionparent-1);
+                int negparentpid = mclund.getInt("pid",negpionparent-1);
+                int pizeroparentpid = mclund.getInt("pid",pizeroparent-1);
+
+               omega_parent = 0;
+                if((pospionparent==negpionparent)&&(negpionparent==pizeroparent)&&(pospionparent==pizeroparent)) {
+                  if(posparentpid==223) {
+                  omega_parent_count++; 
+
+}
+}
+     
+}
+} 
+}
+}
+}
+
+
+System.out.println("Omega total: " + omega_count);
+System.out.println("Omega parents: " + omega_parent_count);
+
