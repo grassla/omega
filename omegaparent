@@ -112,17 +112,17 @@ while(reader.hasNext()==true){
              	mclund.getFloat("px",i),
               	mclund.getFloat("py",i),
               	mclund.getFloat("pz",i),
-              	0.13957 );  
+              	mclund.getFloat("energy",i) );  
          	vnegpion.setPxPyPzM(
              	mclund.getFloat("px",j),
               	mclund.getFloat("py",j),
               	mclund.getFloat("pz",j),
-              	0.13957 ); 
+              	mclund.getFloat("energy",j) ); 
          	vpizero.setPxPyPzM(
              	mclund.getFloat("px",k),
               	mclund.getFloat("py",k),
               	mclund.getFloat("pz",k),
-              	0.13498 ); 
+              	mclund.getFloat("energy",k) ); 
 //do energy instead of mass but how??
             vomega.copy(vpospion);
             vomega.add(vnegpion);
