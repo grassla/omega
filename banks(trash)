@@ -9,6 +9,8 @@ import org.jlab.clas.physics.*;
 import org.jlab.clas.physics.LorentzVector;
 import org.jlab.clas.physics.PhysicsEvent;
 import org.jlab.clas.physics.Particle;
+import org.jlab.clas.physics.EventFilter;
+import org.jlab.physics.io.DataManager;
 //---------------------------------------------------------------------
 // Create HipoReader object and load in file. Create event class and bank instance.
 HipoReader reader = new HipoReader();
@@ -27,79 +29,29 @@ LorentzVector vplusminus = new LorentzVector();
 LorentzVector vpluszero = new LorentzVector();
 //----------------------------------------------------------------------
 // Variables.
-int omega_parent_count = 0;
-int omega_count = 0;
-int count = 0;
-int i = 0;
-int j = 0;
-int k = 0;
-int pospion = 0;
-int negpion = 0;
-int pizero = 0;
-int omega_parent = 0;
-int eventcount = 0;
+
 //----------------------------------------------------------------------
+EventFilter  omega = new EventFilter("211:-211:22:22:X+:X-:Xn");
 reader.getEvent(event,0);  
-List<Integer> pospionList = new ArrayList<>();
-List<Integer> negpionList = new ArrayList<>();
-List<Integer> pizeroList = new ArrayList<>();
-List<Integer> omegaList = new ArrayList<>();
-List<String> mclundList = new ArrayList<>();
+List<Integer> mclundList = new ArrayList<>();
 while(reader.hasNext()==true){
-      pospionList.clear();
-      negpionList.clear();
-      pizeroList.clear(); 
       mclundList.clear();
       reader.nextEvent(event);
       event.read(mclund);
+      PhysicsEvent physEvent = DataManager.getPhysicsEvent(10.6,particles);
+      Particle pospion = physEvent.getParticle("211");
+      Particle negpion = physEvent.getParticle("-211");
+      Particle gamma0 = physEvent.getParticle("22,0");
+      Particle gamma1 = physEvent.getParticle("22,1");
       if(mclund.getRows()>4){ 
           for(int row = 0; row < mclund.getRows(); row++){
               int pid = mclund.getInt("pid",row);
-              count = 0;
-              if(pid==223) { 
-              count++;
-              omega_count = omega_count + count; }
-              if(pid==211) {
-                pospion++;              
-                pospionList.add(row); }
-              if(pid==-211) {
-                negpion++;
-                negpionList.add(row); }
-              if(pid==111) {
-                pizero++;
-                pizeroList.add(row); }
-            }
 
-            for(i=0; i<pospionList.size(); i++) {
-              for(j=0; j<negpionList.size(); j++) {
-               for(k=0; k<pizeroList.size(); k++) {
-                byte pospionparent = mclund.getByte("parent",pospionList.get(i));
-                byte negpionparent = mclund.getByte("parent",negpionList.get(j));
-                byte pizeroparent = mclund.getByte("parent",pizeroList.get(k));
-                int posparentpid = mclund.getInt("pid",pospionparent-1);
-                int negparentpid = mclund.getInt("pid",negpionparent-1);
-                int pizeroparentpid = mclund.getInt("pid",pizeroparent-1);
-           
-                if((pospionparent==negpionparent)&&(negpionparent==pizeroparent)&&(pospionparent==pizeroparent)) {
-                  if(posparentpid==223) {
-                  omega_parent_count++; 
                   //mclundList.add("pid");
                   //System.out.println(mclundList);
-                  if(omega_parent_count==10){ break; }
                   
 }
 }
-}    
-}
-} 
-}
-}
 
 
-
-
-
-
-System.out.println("Omega total: " + omega_count);
-System.out.println("Omega parents: " + omega_parent_count);
 
