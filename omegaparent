@@ -123,12 +123,11 @@ while(reader.hasNext()==true){
               	mclund.getFloat("py",k),
               	mclund.getFloat("pz",k),
               	mclund.getFloat("energy",k) ); 
-//do energy instead of mass but how??
+
             vomega.copy(vpospion);
             vomega.add(vnegpion);
             vomega.add(vpizero);
             hinv.fill(vomega.mass());
-//plot is trash??
             vplusminus.copy(vpospion);
             vplusminus.add(vnegpion);
             vpluszero.copy(vpospion);
