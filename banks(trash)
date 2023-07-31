@@ -34,6 +34,8 @@ LorentzVector vpluszero = new LorentzVector();
 EventFilter  omega = new EventFilter("211:-211:22:22:X+:X-:Xn");
 reader.getEvent(event,0);  
 List<Integer> mclundList = new ArrayList<>();
+List<Integer> recpartList = new ArrayList<>();
+List<Integer> mcpartList = new ArrayList<>();
 while(reader.hasNext()==true){
       mclundList.clear();
       reader.nextEvent(event);
