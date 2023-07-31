@@ -17,10 +17,10 @@ Event 	event = new Event();
 Bank  mclund = new Bank(reader.getSchemaFactory().getSchema("MC::Lund"));
 //----------------------------------------------------------------------
 // Create histograms.
-H1F  hinv = new H1F("hinv" ,100, 0, 50.0);
+H1F  hinv = new H1F("hinv" ,100, 0, 10.0);
 hinv.setTitleX("Inv Mass [GeV/c^2]");
 hinv.setTitle("Inv Mass #omega");
-H2F hdalitz = new H2F("hdalitz" ,100, 0, 200.0,100, 0, 200.0);
+H2F hdalitz = new H2F("hdalitz" ,100, 0, 50.0,100, 0, 50.0);
 hdalitz.setTitleX("W^2 plusminus");
 hdalitz.setTitleY("W^2 pluszero");
 hdalitz.setTitle("Dalitz Plot #omega");
@@ -108,17 +108,17 @@ while(reader.hasNext()==true){
                   //omega_parent_count = omega_parent_count + omega_parent; 
                   omega_parent_count++; 
 
-         	vpospion.setPxPyPzM(
+         	vpospion.setPxPyPzE(
              	mclund.getFloat("px",i),
               	mclund.getFloat("py",i),
               	mclund.getFloat("pz",i),
               	mclund.getFloat("energy",i) );  
-         	vnegpion.setPxPyPzM(
+         	vnegpion.setPxPyPzE(
              	mclund.getFloat("px",j),
               	mclund.getFloat("py",j),
               	mclund.getFloat("pz",j),
               	mclund.getFloat("energy",j) ); 
-         	vpizero.setPxPyPzM(
+         	vpizero.setPxPyPzE(
              	mclund.getFloat("px",k),
               	mclund.getFloat("py",k),
               	mclund.getFloat("pz",k),
