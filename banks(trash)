@@ -39,19 +39,30 @@ while(reader.hasNext()==true){
       reader.nextEvent(event);
       event.read(mclund);
       PhysicsEvent physEvent = DataManager.getPhysicsEvent(10.6,mclund);
-      Particle pospion = physEvent.getParticle("211");
-      Particle negpion = physEvent.getParticle("-211");
-      Particle gamma0 = physEvent.getParticle("22,0");
-      Particle gamma1 = physEvent.getParticle("22,1");
       if(mclund.getRows()>4){ 
           for(int row = 0; row < mclund.getRows(); row++){
               int pid = mclund.getInt("pid",row);
-
-                  mclundList.add(pid);
-                  
-                  
+                  mclundList.add(pid);                
 }
 System.out.println(mclundList);
+}
+event.read(recpart);
+PhysicsEvent physEvent0 = DataManager.getPhysicsEvent(10.6,recpart);
+      if(recpart.getRows()>4){ 
+          for(int row = 0; row < recpart.getRows(); row++){
+              int pid = recpart.getInt("pid",row);
+                  recpartList.add(pid);                 
+}
+System.out.println(recpartList);
+}
+event.read(mcpart);
+PhysicsEvent physEvent1 = DataManager.getPhysicsEvent(10.6,mcpart);
+      if(mcpart.getRows()>4){ 
+          for(int row = 0; row < mcpart.getRows(); row++){
+              int pid = mcpart.getInt("pid",row);
+                  mcpartList.add(pid);                 
+}
+System.out.println(mcpartList);
 }
 }
 
