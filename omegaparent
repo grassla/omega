@@ -17,10 +17,10 @@ Event 	event = new Event();
 Bank  mclund = new Bank(reader.getSchemaFactory().getSchema("MC::Lund"));
 //----------------------------------------------------------------------
 // Create histograms.
-H1F  hinv = new H1F("hinv" ,100, 0, 10.0);
+H1F  hinv = new H1F("hinv" ,100, 0, 50.0);
 hinv.setTitleX("Inv Mass [GeV/c^2]");
 hinv.setTitle("Inv Mass #omega");
-H2F hdalitz = new H2F("hdalitz" ,100, 0, 6.0,100, 0, 6.0);
+H2F hdalitz = new H2F("hdalitz" ,100, 0, 200.0,100, 0, 200.0);
 hdalitz.setTitleX("W^2 plusminus");
 hdalitz.setTitleY("W^2 pluszero");
 hdalitz.setTitle("Dalitz Plot #omega");
