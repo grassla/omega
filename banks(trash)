@@ -46,7 +46,7 @@ while(reader.hasNext()==true){
               int pid = mclund.getInt("pid",row);
                   mclundList.add(pid);                
 }
-System.out.println(mclundList);
+//System.out.println(mclundList);
 }
 event.read(recpart);
 PhysicsEvent physEvent0 = DataManager.getPhysicsEvent(10.6,recpart);
@@ -55,7 +55,7 @@ PhysicsEvent physEvent0 = DataManager.getPhysicsEvent(10.6,recpart);
               int pid = recpart.getInt("pid",row);
                   recpartList.add(pid);                 
 }
-System.out.println(recpartList);
+//System.out.println(recpartList);
 }
 event.read(mcpart);
 PhysicsEvent physEvent1 = DataManager.getPhysicsEvent(10.6,mcpart);
@@ -64,7 +64,7 @@ PhysicsEvent physEvent1 = DataManager.getPhysicsEvent(10.6,mcpart);
               int pid = mcpart.getInt("pid",row);
                   mcpartList.add(pid);                 
 }
-System.out.println(mcpartList);
+//System.out.println(mcpartList);
 }
 }
 
