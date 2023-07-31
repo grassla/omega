@@ -17,10 +17,10 @@ Event 	event = new Event();
 Bank  mclund = new Bank(reader.getSchemaFactory().getSchema("MC::Lund"));
 //----------------------------------------------------------------------
 // Create histograms.
-H1F  hinv = new H1F("hinv" ,100, 0, 10.0);
+H1F  hinv = new H1F("hinv" ,100, 0, 1.0);
 hinv.setTitleX("Inv Mass [GeV/c^2]");
 hinv.setTitle("Inv Mass #omega");
-H2F hdalitz = new H2F("hdalitz" ,100, 0, 50.0,100, 0, 50.0);
+H2F hdalitz = new H2F("hdalitz" ,100, 0, 0.6,100, 0, 0.6);
 hdalitz.setTitleX("W^2 plusminus");
 hdalitz.setTitleY("W^2 pluszero");
 hdalitz.setTitle("Dalitz Plot #omega");
@@ -109,20 +109,20 @@ while(reader.hasNext()==true){
                   omega_parent_count++; 
 
          	vpospion.setPxPyPzE(
-             	mclund.getFloat("px",i),
-              	mclund.getFloat("py",i),
-              	mclund.getFloat("pz",i),
-              	mclund.getFloat("energy",i) );  
+             	mclund.getFloat("px",pospionList.get(i)),
+              	mclund.getFloat("py",pospionList.get(i)),
+              	mclund.getFloat("pz",pospionList.get(i)),
+              	mclund.getFloat("energy",pospionList.get(i)) );  
          	vnegpion.setPxPyPzE(
-             	mclund.getFloat("px",j),
-              	mclund.getFloat("py",j),
-              	mclund.getFloat("pz",j),
-              	mclund.getFloat("energy",j) ); 
+             	mclund.getFloat("px",negpionList.get(j)),
+              	mclund.getFloat("py",negpionList.get(j)),
+              	mclund.getFloat("pz",negpionList.get(j)),
+              	mclund.getFloat("energy",negpionList.get(j)) ); 
          	vpizero.setPxPyPzE(
-             	mclund.getFloat("px",k),
-              	mclund.getFloat("py",k),
-              	mclund.getFloat("pz",k),
-              	mclund.getFloat("energy",k) ); 
+             	mclund.getFloat("px",pizeroList.get(k)),
+              	mclund.getFloat("py",pizeroList.get(k)),
+              	mclund.getFloat("pz",pizeroList.get(k)),
+              	mclund.getFloat("energy",pizeroList.get(k)) ); 
 
             vomega.copy(vpospion);
             vomega.add(vnegpion);
