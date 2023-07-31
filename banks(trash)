@@ -9,8 +9,6 @@ import org.jlab.clas.physics.*;
 import org.jlab.clas.physics.LorentzVector;
 import org.jlab.clas.physics.PhysicsEvent;
 import org.jlab.clas.physics.Particle;
-import org.jlab.clas.physics.EventFilter;
-import org.jlab.physics.io.DataManager;
 //---------------------------------------------------------------------
 // Create HipoReader object and load in file. Create event class and bank instance.
 HipoReader reader = new HipoReader();
@@ -39,34 +37,28 @@ int pospion = 0;
 int negpion = 0;
 int pizero = 0;
 int omega_parent = 0;
-int count0 = 0;
 int eventcount = 0;
 //----------------------------------------------------------------------
-EventFilter  omegafilter = new EventFilter("211:-211:22:22:X+:X-:Xn");
 reader.getEvent(event,0);  
 List<Integer> pospionList = new ArrayList<>();
 List<Integer> negpionList = new ArrayList<>();
 List<Integer> pizeroList = new ArrayList<>();
 List<Integer> omegaList = new ArrayList<>();
+List<String> mclundList = new ArrayList<>();
 while(reader.hasNext()==true){
       pospionList.clear();
       negpionList.clear();
       pizeroList.clear(); 
+      mclundList.clear();
       reader.nextEvent(event);
       event.read(mclund);
-      //PhysicsEvent physEvent = DataManager.getPhysicsEvent(10.6,particles);
-     // Particle Proton = physEvent.getParticle("2212");
       if(mclund.getRows()>4){ 
           for(int row = 0; row < mclund.getRows(); row++){
               int pid = mclund.getInt("pid",row);
               count = 0;
-              count0 = 0;
               if(pid==223) { 
               count++;
               omega_count = omega_count + count; }
-              if(pid==113) {
-              count0++;
-              rho_count = rho_count + count0; }
               if(pid==211) {
                 pospion++;              
                 pospionList.add(row); }
@@ -87,20 +79,25 @@ while(reader.hasNext()==true){
                 int posparentpid = mclund.getInt("pid",pospionparent-1);
                 int negparentpid = mclund.getInt("pid",negpionparent-1);
                 int pizeroparentpid = mclund.getInt("pid",pizeroparent-1);
-
-               omega_parent = 0;
+           
                 if((pospionparent==negpionparent)&&(negpionparent==pizeroparent)&&(pospionparent==pizeroparent)) {
                   if(posparentpid==223) {
                   omega_parent_count++; 
-
+                  //mclundList.add("pid");
+                  //System.out.println(mclundList);
+                  if(omega_parent_count==10){ break; }
+                  
 }
 }
-     
+}    
 }
 } 
 }
 }
-}
+
+
+
+
 
 
 System.out.println("Omega total: " + omega_count);
