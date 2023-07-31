@@ -11,6 +11,10 @@ import org.jlab.clas.physics.PhysicsEvent;
 import org.jlab.clas.physics.Particle;
 import org.jlab.clas.physics.EventFilter;
 import org.jlab.physics.io.DataManager;
+
+
+//@SuppressWarnings("all")
+
 //---------------------------------------------------------------------
 // Create HipoReader object and load in file. Create event class and bank instance.
 HipoReader reader = new HipoReader();
@@ -29,13 +33,14 @@ LorentzVector vplusminus = new LorentzVector();
 LorentzVector vpluszero = new LorentzVector();
 //----------------------------------------------------------------------
 // Variables.
-
+int count = 0;
 //----------------------------------------------------------------------
 EventFilter  omega = new EventFilter("211:-211:22:22:X+:X-:Xn");
 reader.getEvent(event,0);  
 List<Integer> mclundList = new ArrayList<>();
 List<Integer> recpartList = new ArrayList<>();
 List<Integer> mcpartList = new ArrayList<>();
+count = 0;
 while(reader.hasNext()==true){
       mclundList.clear();
       reader.nextEvent(event);
@@ -46,26 +51,30 @@ while(reader.hasNext()==true){
               int pid = mclund.getInt("pid",row);
                   mclundList.add(pid);                
 }
-//System.out.println(mclundList);
 }
+System.out.println("MC::Lund: " + mclundList);
 event.read(recpart);
+recpartList.clear();
 PhysicsEvent physEvent0 = DataManager.getPhysicsEvent(10.6,recpart);
       if(recpart.getRows()>4){ 
           for(int row = 0; row < recpart.getRows(); row++){
               int pid = recpart.getInt("pid",row);
                   recpartList.add(pid);                 
 }
-//System.out.println(recpartList);
 }
+System.out.println("REC::Particle: " + recpartList);
 event.read(mcpart);
+mcpartList.clear();
 PhysicsEvent physEvent1 = DataManager.getPhysicsEvent(10.6,mcpart);
       if(mcpart.getRows()>4){ 
           for(int row = 0; row < mcpart.getRows(); row++){
               int pid = mcpart.getInt("pid",row);
                   mcpartList.add(pid);                 
 }
-//System.out.println(mcpartList);
 }
+count++;
+System.out.println("MC::Particle: " + mcpartList);
+if(count==10){ break; }
 }
 
 
