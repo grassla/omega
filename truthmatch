@@ -32,7 +32,7 @@ LorentzVector electron0 = new LorentzVector();
 LorentzVector electron1 = new LorentzVector();
 //----------------------------------------------------------------------
 // Variables.
-int count = 0;
+double count = 0;
 double theta = 0;
 double phi = 0;
 double energyy = 0;
@@ -45,6 +45,16 @@ double theta1 = 0;
 double phi1 = 0;
 double energy1 = 0;
 double momentum1 = 0;
+double theta01 = 0;
+double thetadiff01 = 0;
+int thetacount = 0;
+double phi01 = 0;
+double phidiff01 = 0;
+int phicount = 0;
+double momentum01 = 0;
+double momentumdiff01 = 0;
+int momentumcount = 0;
+double counter = 0;
 //----------------------------------------------------------------------
 //EventFilter  omega = new EventFilter("211:-211:22:22:X+:X-:Xn");
 reader.getEvent(event,0);  
@@ -74,8 +84,8 @@ while(reader.hasNext()==true){
                 momentum = electron.p(); }
 }
 }
-System.out.println("MC::Lund: " + mclundList);
-System.out.println("a " + theta + " b " + phi + " c " + energyy + " d " + momentum);
+System.out.println("-----MC::Lund: " + mclundList);
+System.out.println("Theta " + theta + " Phi " + phi + " Energy " + energyy + " Momentum " + momentum);
 event.read(recpart);
 recpartList.clear();
 //PhysicsEvent physEvent0 = DataManager.getPhysicsEvent(10.6,recpart);
@@ -95,9 +105,9 @@ recpartList.clear();
                 momentum0 = electron0.p(); }
 }
 }
-System.out.println("REC::Particle: " + recpartList);
+System.out.println("-----REC::Particle: " + recpartList);
 
-System.out.println("a " + theta0 + " b " + phi0 + " c " + energy0 + " d " + momentum0);
+System.out.println("Theta " + theta0 + " Phi " + phi0 + " Energy " + energy0 + " Momentum " + momentum0);
 
 event.read(mcpart);
 mcpartList.clear();
@@ -119,10 +129,45 @@ mcpartList.clear();
 }
 }
 count++;
-System.out.println("MC::Particle: " + mcpartList);
-System.out.println("a " + theta1 + " b " + phi1 + " c " + energy1 + " d " + momentum1);
+System.out.println("-----MC::Particle: " + mcpartList);
+System.out.println("Theta " + theta1 + " Phi " + phi1 + " Energy " + energy1 + " Momentum " + momentum1);
+
+System.out.println("<><><><>MC::Particle and REC::Particle Truth Matching<><><><>");
+
+thetacount = 0;
+theta01 = (Math.abs(theta1) + Math.abs(theta0)) / 2;
+thetadiff01 = theta1 - theta0;
+if(Math.abs(thetadiff01)<=.05*Math.abs(theta01)){
+thetacount++; }
+System.out.println("**Theta: **");
+System.out.println("Avg " + theta01 + " Diff " + thetadiff01);
+System.out.println("True? " + thetacount);
+
+phicount = 0;
+phi01 = (Math.abs(phi1) + Math.abs(phi0)) / 2;
+phidiff01 = phi1 - phi0;
+if(Math.abs(phidiff01)<=.05*Math.abs(phi01)){
+phicount++; }
+System.out.println("**Phi: **");
+System.out.println("Avg " + phi01 + " Diff " + phidiff01);
+System.out.println("True? " + phicount);
+
+momentumcount = 0;
+momentum01 = (momentum1 + momentum0) / 2;
+momentumdiff01 = momentum1 - momentum0;
+if(Math.abs(momentumdiff01)<=.05*Math.abs(momentum01)){
+momentumcount++; }
+System.out.println("**Momentum: **");
+System.out.println("Avg " + momentum01 + " Diff " + momentumdiff01);
+System.out.println("True? " + momentumcount);
+
 System.out.println("-------------------------------------------------------------------------------------------------------");
-if(count==10){ break; }
+//if(count==10){ break; }
+
+if(thetacount>=1&&phicount>=1&&momentumcount>=1) {
+counter++; }
+
 }
-
-
+double percentage = counter*100 / count;
+System.out.println("MC::Particle and REC::Particle Truth Matching");
+System.out.println("# Matching Events Across All Variables: " + String.format("%.0f", counter) + " of " + String.format("%.0f", count) + " events (" + String.format("%.2f", percentage) + " %) ");
