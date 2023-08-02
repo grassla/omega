@@ -178,11 +178,10 @@ System.out.println("Avg " + momentum01 + " Diff " + momentumdiff01);
 System.out.println("True? " + momentumcount);
 
 System.out.println("-------------------------------------------------------------------------------------------------------");
-if(count==10){ break; }
+//if(count==10){ break; }
 
 if(thetacount>=1&&phicount>=1&&energycount>=1&&momentumcount>=1) {
 counter++; }
-
 }
 double percentage = counter*100 / count;
 System.out.println("MC::Particle and REC::Particle");
