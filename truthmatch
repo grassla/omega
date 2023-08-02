@@ -206,7 +206,7 @@ System.out.println("True? " + momentumcount);
 
 
 System.out.println("");
-System.out.println("<><><><>MC::Particle and MC::Lund Truth Matching<><><><>");
+System.out.println("<><><><>REC::Particle and MC::Lund Truth Matching<><><><>");
 
 thetacount0 = 0;
 theta00 = (Math.abs(theta) + Math.abs(theta0)) / 2;
@@ -247,7 +247,7 @@ System.out.println("True? " + momentumcount0);
 
 
 System.out.println("");
-System.out.println("<><><><>REC::Particle and MC::Lund Truth Matching<><><><>");
+System.out.println("<><><><>MC::Particle and MC::Lund Truth Matching<><><><>");
 
 thetacount1 = 0;
 theta11 = (Math.abs(theta) + Math.abs(theta1)) / 2;
@@ -299,8 +299,8 @@ double percentage0 = counter0*100 / count;
 double percentage1 = counter1*100 / count;
 System.out.println("MC::Particle and REC::Particle");
 System.out.println("# Matching Events Across All Variables: " + String.format("%.0f", counter) + " of " + String.format("%.0f", count) + " events (" + String.format("%.2f", percentage) + " %) ");
-System.out.println("MC::Particle and MC::Lund");
-System.out.println("# Matching Events Across All Variables: " + String.format("%.0f", counter0) + " of " + String.format("%.0f", count) + " events (" + String.format("%.2f", percentage0) + " %) ");
 System.out.println("REC::Particle and MC::Lund");
+System.out.println("# Matching Events Across All Variables: " + String.format("%.0f", counter0) + " of " + String.format("%.0f", count) + " events (" + String.format("%.2f", percentage0) + " %) ");
+System.out.println("MC::Particle and MC::Lund");
 System.out.println("# Matching Events Across All Variables: " + String.format("%.0f", counter1) + " of " + String.format("%.0f", count) + " events (" + String.format("%.2f", percentage1) + " %) ");
 
