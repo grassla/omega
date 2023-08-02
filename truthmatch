@@ -1,0 +1,128 @@
+// Import Libraries
+import org.jlab.jnp.hipo4.io.*;
+import org.jlab.jnp.hipo4.data.*;
+import org.jlab.groot.data.*;
+import org.jlab.groot.graphics.*;
+import org.jlab.groot.math.*;
+import org.jlab.groot.ui.*;
+import org.jlab.clas.physics.*;
+import org.jlab.clas.physics.LorentzVector;
+import org.jlab.clas.physics.PhysicsEvent;
+import org.jlab.clas.physics.Particle;
+//import org.jlab.clas.physics.EventFilter;
+//import org.jlab.physics.io.DataManager;
+
+
+//@SuppressWarnings("all")
+
+//---------------------------------------------------------------------
+// Create HipoReader object and load in file. Create event class and bank instance.
+HipoReader reader = new HipoReader();
+reader.open("/home/grassla/SimOuts.hipo");
+Event 	event = new Event();
+Bank  mclund = new Bank(reader.getSchemaFactory().getSchema("MC::Lund"));
+Bank recpart = new Bank(reader.getSchemaFactory().getSchema("REC::Particle"));
+Bank mcpart = new Bank(reader.getSchemaFactory().getSchema("MC::Particle"));
+//----------------------------------------------------------------------
+// Create Lorentz Vectors.
+LorentzVector  vBeam   = new LorentzVector(0.0,0.0,10.6,10.6);
+LorentzVector  vTarget = new LorentzVector(0.0,0.0,0.0,0.938);
+LorentzVector electron = new LorentzVector();
+LorentzVector electron0 = new LorentzVector();
+LorentzVector electron1 = new LorentzVector();
+//----------------------------------------------------------------------
+// Variables.
+int count = 0;
+double theta = 0;
+double phi = 0;
+double energy = 0;
+double momentum = 0;
+double theta0 = 0;
+double phi0 = 0;
+double energy0 = 0;
+double momentum0 = 0;
+double theta1 = 0;
+double phi1 = 0;
+double energy1 = 0;
+double momentum1 = 0;
+//----------------------------------------------------------------------
+//EventFilter  omega = new EventFilter("211:-211:22:22:X+:X-:Xn");
+reader.getEvent(event,0);  
+List<Integer> mclundList = new ArrayList<>();
+List<Integer> recpartList = new ArrayList<>();
+List<Integer> mcpartList = new ArrayList<>();
+count = 0;
+while(reader.hasNext()==true){
+      mclundList.clear();
+      reader.nextEvent(event);
+      event.read(mclund);
+      //PhysicsEvent physEvent = DataManager.getPhysicsEvent(10.6,mclund);
+      if(mclund.getRows()>4){ 
+          for(int row = 0; row < mclund.getRows(); row++){
+              int pid = mclund.getInt("pid",row);
+                  mclundList.add(pid);     
+
+      	if(pid==11){
+         	electron.setPxPyPzE(
+             	  mclund.getFloat("px",row),
+              	mclund.getFloat("py",row),
+              	mclund.getFloat("pz",row),
+              	mclund.getFloat("energy", row) ); 
+                theta = electron.theta()*(180/3.1415);
+                phi = electron.phi()*(180/3.1415);
+                energy = electron.e();
+                momentum = electron.p(); }
+}
+}
+System.out.println("MC::Lund: " + mclundList);
+System.out.println("a " + theta + " b " + phi + " c " + energy + " d " + momentum);
+event.read(recpart);
+recpartList.clear();
+//PhysicsEvent physEvent0 = DataManager.getPhysicsEvent(10.6,recpart);
+      if(recpart.getRows()>4){ 
+          for(int row = 0; row < recpart.getRows(); row++){
+              int pid = recpart.getInt("pid",row);
+                  recpartList.add(pid);  
+      	if(pid==11){
+         	electron0.setPxPyPzE(
+             	  recpart.getFloat("px",row),
+              	recpart.getFloat("py",row),
+              	recpart.getFloat("pz",row),
+              	recpart.getFloat("energy", row) ); 
+                theta0 = electron0.theta()*(180/3.1415);
+                phi0 = electron0.phi()*(180/3.1415);
+                energy0 = electron0.e();
+                momentum0 = electron0.p(); }
+}
+}
+System.out.println("REC::Particle: " + recpartList);
+
+System.out.println("a " + theta0 + " b " + phi0 + " c " + energy0 + " d " + momentum0);
+
+event.read(mcpart);
+mcpartList.clear();
+//PhysicsEvent physEvent1 = DataManager.getPhysicsEvent(10.6,mcpart);
+      if(mcpart.getRows()>4){ 
+          for(int row = 0; row < mcpart.getRows(); row++){
+              int pid = mcpart.getInt("pid",row);
+                  mcpartList.add(pid);     
+      	if(pid==11){
+         	electron1.setPxPyPzE(
+             	  mcpart.getFloat("px",row),
+              	mcpart.getFloat("py",row),
+              	mcpart.getFloat("pz",row),
+              	mcpart.getFloat("energy", row) ); 
+                theta1 = electron01.theta()*(180/3.1415);
+                phi1 = electron1.phi()*(180/3.1415);
+                energy1 = electron1.e();
+                momentum1 = electron1.p(); }
+}
+}
+count++;
+System.out.println("MC::Particle: " + mcpartList);
+System.out.println("a " + theta1 + " b " + phi1 + " c " + energy1 + " d " + momentum1);
+
+if(count==10){ break; }
+}
+
+
