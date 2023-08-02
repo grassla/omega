@@ -35,7 +35,7 @@ LorentzVector electron1 = new LorentzVector();
 int count = 0;
 double theta = 0;
 double phi = 0;
-double energy = 0;
+double energyy = 0;
 double momentum = 0;
 double theta0 = 0;
 double phi0 = 0;
@@ -70,12 +70,12 @@ while(reader.hasNext()==true){
               	mclund.getFloat("energy", row) ); 
                 theta = electron.theta()*(180/3.1415);
                 phi = electron.phi()*(180/3.1415);
-                energy = electron.e();
+                energyy = electron.e();
                 momentum = electron.p(); }
 }
 }
 System.out.println("MC::Lund: " + mclundList);
-System.out.println("a " + theta + " b " + phi + " c " + energy + " d " + momentum);
+System.out.println("a " + theta + " b " + phi + " c " + energyy + " d " + momentum);
 event.read(recpart);
 recpartList.clear();
 //PhysicsEvent physEvent0 = DataManager.getPhysicsEvent(10.6,recpart);
@@ -112,7 +112,7 @@ mcpartList.clear();
               	mcpart.getFloat("py",row),
               	mcpart.getFloat("pz",row),
               	mcpart.getFloat("energy", row) ); 
-                theta1 = electron01.theta()*(180/3.1415);
+                theta1 = electron1.theta()*(180/3.1415);
                 phi1 = electron1.phi()*(180/3.1415);
                 energy1 = electron1.e();
                 momentum1 = electron1.p(); }
@@ -121,7 +121,7 @@ mcpartList.clear();
 count++;
 System.out.println("MC::Particle: " + mcpartList);
 System.out.println("a " + theta1 + " b " + phi1 + " c " + energy1 + " d " + momentum1);
-
+System.out.println("-------------------------------------------------------------------------------------------------------");
 if(count==10){ break; }
 }
 
