@@ -1,0 +1,302 @@
+// Import Libraries
+import org.jlab.jnp.hipo4.io.*;
+import org.jlab.jnp.hipo4.data.*;
+import org.jlab.groot.data.*;
+import org.jlab.groot.graphics.*;
+import org.jlab.groot.math.*;
+import org.jlab.groot.ui.*;
+import org.jlab.clas.physics.*;
+import org.jlab.clas.physics.LorentzVector;
+import org.jlab.clas.physics.PhysicsEvent;
+import org.jlab.clas.physics.Particle;
+import org.jlab.clas.physics.EventFilter;
+import org.jlab.physics.io.DataManager;
+
+
+//@SuppressWarnings("all")
+
+//---------------------------------------------------------------------
+// Create HipoReader object and load in file. Create event class and bank instance.
+HipoReader reader = new HipoReader();
+reader.open("/home/grassla/SimOuts.hipo");
+Event 	event = new Event();
+Bank  mclund = new Bank(reader.getSchemaFactory().getSchema("MC::Lund"));
+Bank recpart = new Bank(reader.getSchemaFactory().getSchema("REC::Particle"));
+Bank mcpart = new Bank(reader.getSchemaFactory().getSchema("MC::Particle"));
+//----------------------------------------------------------------------
+// Create Lorentz Vectors.
+LorentzVector  vBeam   = new LorentzVector(0.0,0.0,10.6,10.6);
+LorentzVector  vTarget = new LorentzVector(0.0,0.0,0.0,0.938);
+LorentzVector electron = new LorentzVector();
+LorentzVector electron0 = new LorentzVector();
+LorentzVector electron1 = new LorentzVector();
+//----------------------------------------------------------------------
+TCanvas W = new TCanvas("W",800,800);
+
+H1F  hOmega_Inv = new H1F("hOmega_Inv" ,100, 0.0, 3.0);
+hOmega_Inv.setTitleX("Inv Mass [GeV/c^2]");
+hOmega_Inv.setTitle("Invariant Mass #omega");
+H1F  hPi0_Inv = new H1F("hPi0_Inv" ,100, 0.0, 1.0);
+hPi0_Inv.setTitleX("Inv Mass [GeV/c^2]");
+hPi0_Inv.setTitle("Invariant Mass #pi 0");
+H1F  hOmega_Inv_alternate = new H1F("hOmega_Inv_alternate" ,100, 0.0, 3.0);
+hOmega_Inv_alternate.setTitleX("Inv Mass [GeV/c^2]");
+hOmega_Inv_alternate.setTitle("Invariant Mass #omega Alternate");
+H1F  hPis_Inv = new H1F("hPis_Inv" ,100, 0.0, 2.0);
+hPis_Inv.setTitleX("Inv Mass [GeV/c^2]");
+hPis_Inv.setTitle("Invariant Mass #pi + #pi -");
+//----------------------------------------------------------------------
+// Variables.
+double count = 0;
+double theta = 0;
+double phi = 0;
+double energyy = 0;
+double momentum = 0;
+double theta0 = 0;
+double phi0 = 0;
+double energy0 = 0;
+double momentum0 = 0;
+double theta1 = 0;
+double phi1 = 0;
+double energy1 = 0;
+double momentum1 = 0;
+double theta01 = 0;
+double thetadiff01 = 0;
+int thetacount = 0;
+double phi01 = 0;
+double phidiff01 = 0;
+int phicount = 0;
+double momentum01 = 0;
+double momentumdiff01 = 0;
+int momentumcount = 0;
+double counter = 0;
+double energy01 = 0;
+double energydiff01 = 0;
+int energycount = 0;
+int thetacount0 = 0;
+int phicount0 = 0;
+int momentumcount0 = 0;
+int energycount0 = 0;
+double theta00 = 0;
+double phi00 = 0;
+double momentum00 = 0;
+double energy00 = 0;
+double thetadiff00 = 0;
+double phidiff00 = 0;
+double momentumdiff00 = 0;
+double energydiff00 = 0;
+double counter0 = 0;
+int thetacount1 = 0;
+int phicount1 = 0;
+int momentumcount1 = 0;
+int energycount1 = 0;
+double theta11 = 0;
+double phi11 = 0;
+double momentum11 = 0;
+double energy11 = 0;
+double thetadiff11 = 0;
+double phidiff11 = 0;
+double momentumdiff11 = 0;
+double energydiff11 = 0;
+double counter1 = 0;
+//----------------------------------------------------------------------
+//EventFilter  omega = new EventFilter("211:-211:22:22:X+:X-:Xn");
+reader.getEvent(event,0);  
+List<Integer> mclundList = new ArrayList<>();
+List<Integer> recpartList = new ArrayList<>();
+List<Integer> mcpartList = new ArrayList<>();
+count = 0;
+EventFilter  Omega_filter = new EventFilter("11:22:22:211:-211:X+:X-:Xn");
+while(reader.hasNext()==true){
+      mclundList.clear();
+      reader.nextEvent(event);
+      event.read(mclund);
+      PhysicsEvent physEvent = DataManager.getPhysicsEvent(10.6,mclund);
+  Particle Omega = physEvent.getParticle("[22,0]+[22,1]+[211]+[-211]");
+     LorentzVector vOmega = physEvent.getParticle("[22,0]+[22,1]+[211]+[-211]").vector();
+     Particle Piplus = physEvent.getParticle("[211]");
+     LorentzVector vPiplus = physEvent.getParticle("[211]").vector();
+     Particle Piminus = physEvent.getParticle("[-211]");
+     LorentzVector vPiminus = physEvent.getParticle("[-211]").vector();
+     Particle Pi0 = physEvent.getParticle("[22,0]+[22,1]");
+     LorentzVector vPi0 = physEvent.getParticle("[22,0]+[22,1]").vector();
+     Particle Piplusminus = physEvent.getParticle("[-211] + [211]");
+     LorentzVector vPiplusminus = physEvent.getParticle("[211] + [-211]").vector();
+     Particle Dalitzplusminus = physEvent.getParticle("[211] + [-211]");
+     Particle Dalitzpluszero = physEvent.getParticle("[211] + [22,0] + [22,1]");
+      if(mclund.getRows()>4){     
+
+      	if(pid==11){
+         	electron.setPxPyPzE(
+             	  mclund.getFloat("px",row),
+              	mclund.getFloat("py",row),
+              	mclund.getFloat("pz",row),
+              	mclund.getFloat("energy", row) ); 
+                theta = electron.theta()*(180/3.1415);
+                phi = electron.phi()*(180/3.1415);
+                energyy = electron.e();
+                momentum = electron.p(); }
+}
+event.read(recpart);
+recpartList.clear();
+PhysicsEvent physEvent0 = DataManager.getPhysicsEvent(10.6,recpart);
+  Particle Omega0 = physEvent0.getParticle("[22,0]+[22,1]+[211]+[-211]");
+     LorentzVector vOmega0 = physEvent0.getParticle("[22,0]+[22,1]+[211]+[-211]").vector();
+     Particle Piplus0 = physEvent0.getParticle("[211]");
+     LorentzVector vPiplus0 = physEvent0.getParticle("[211]").vector();
+     Particle Piminus0 = physEvent0.getParticle("[-211]");
+     LorentzVector vPiminus0 = physEvent0.getParticle("[-211]").vector();
+     Particle Pi00 = physEvent0.getParticle("[22,0]+[22,1]");
+     LorentzVector vPi00 = physEvent0.getParticle("[22,0]+[22,1]").vector();
+     Particle Piplusminus0 = physEvent0.getParticle("[-211] + [211]");
+     LorentzVector vPiplusminus0 = physEvent0.getParticle("[211] + [-211]").vector();
+     Particle Dalitzplusminus0 = physEvent0.getParticle("[211] + [-211]");
+     Particle Dalitzpluszero0 = physEvent0.getParticle("[211] + [22,0] + [22,1]");
+      if(recpart.getRows()>4){  
+      	if(pid==11){
+         	electron0.setPxPyPzM(
+             	  recpart.getFloat("px",row),
+              	recpart.getFloat("py",row),
+              	recpart.getFloat("pz",row),
+              	0.0005 ); 
+                theta0 = electron0.theta()*(180/3.1415);
+                phi0 = electron0.phi()*(180/3.1415);
+                energy0 = electron0.e();
+                momentum0 = electron0.p(); }
+}
+
+event.read(mcpart);
+mcpartList.clear();
+PhysicsEvent physEvent1 = DataManager.getPhysicsEvent(10.6,mcpart);
+  Particle Omega1 = physEvent1.getParticle("[22,0]+[22,1]+[211]+[-211]");
+     LorentzVector vOmega1 = physEvent1.getParticle("[22,0]+[22,1]+[211]+[-211]").vector();
+     Particle Piplus1 = physEvent1.getParticle("[211]");
+     LorentzVector vPiplus1 = physEvent1.getParticle("[211]").vector();
+     Particle Piminus1 = physEvent1.getParticle("[-211]");
+     LorentzVector vPiminus1 = physEvent1.getParticle("[-211]").vector();
+     Particle Pi01 = physEvent1.getParticle("[22,0]+[22,1]");
+     LorentzVector vPi01 = physEvent1.getParticle("[22,0]+[22,1]").vector();
+     Particle Piplusminus1 = physEvent1.getParticle("[-211] + [211]");
+     LorentzVector vPiplusminus1 = physEvent1.getParticle("[211] + [-211]").vector();
+     Particle Dalitzplusminus1 = physEvent1.getParticle("[211] + [-211]");
+     Particle Dalitzpluszero1 = physEvent1.getParticle("[211] + [22,0] + [22,1]");
+      if(mcpart.getRows()>4){     
+      	if(pid==11){
+         	electron1.setPxPyPzM(
+             	  mcpart.getFloat("px",row),
+              	mcpart.getFloat("py",row),
+              	mcpart.getFloat("pz",row),
+              	0.0005 ); 
+                theta1 = electron1.theta()*(180/3.1415);
+                phi1 = electron1.phi()*(180/3.1415);
+                energy1 = electron1.e();
+                momentum1 = electron1.p(); }
+}
+count++;
+
+thetacount = 0;
+theta01 = (Math.abs(theta1) + Math.abs(theta0)) / 2;
+thetadiff01 = theta1 - theta0;
+if(Math.abs(thetadiff01)<=.05*Math.abs(theta01)){
+thetacount++; }
+
+phicount = 0;
+phi01 = (Math.abs(phi1) + Math.abs(phi0)) / 2;
+phidiff01 = phi1 - phi0;
+if(Math.abs(phidiff01)<=.05*Math.abs(phi01)){
+phicount++; }
+
+energycount = 0;
+energy01 = (energy1 + energy0) / 2;
+energydiff01 = energy1 - energy0;
+if(Math.abs(energydiff01)<=.05*Math.abs(energy01)){
+energycount++; }
+
+momentumcount = 0;
+momentum01 = (momentum1 + momentum0) / 2;
+momentumdiff01 = momentum1 - momentum0;
+if(Math.abs(momentumdiff01)<=.05*Math.abs(momentum01)){
+momentumcount++; }
+
+thetacount0 = 0;
+theta00 = (Math.abs(theta) + Math.abs(theta0)) / 2;
+thetadiff00 = theta - theta0;
+if(Math.abs(thetadiff00)<=.05*Math.abs(theta00)){
+thetacount0++; }
+
+phicount0 = 0;
+phi00 = (Math.abs(phi) + Math.abs(phi0)) / 2;
+phidiff00 = phi - phi0;
+if(Math.abs(phidiff00)<=.05*Math.abs(phi00)){
+phicount0++; }
+
+energycount0 = 0;
+energy00 = (energyy + energy0) / 2;
+energydiff00 = energyy - energy0;
+if(Math.abs(energydiff00)<=.05*Math.abs(energy00)){
+energycount0++; }
+
+momentumcount0 = 0;
+momentum00 = (momentum + momentum0) / 2;
+momentumdiff00 = momentum - momentum0;
+if(Math.abs(momentumdiff00)<=.05*Math.abs(momentum00)){
+momentumcount0++; }
+
+thetacount1 = 0;
+theta11 = (Math.abs(theta) + Math.abs(theta1)) / 2;
+thetadiff11 = theta - theta1;
+if(Math.abs(thetadiff11)<=.05*Math.abs(theta11)){
+thetacount1++; }
+
+phicount1 = 0;
+phi11 = (Math.abs(phi) + Math.abs(phi1)) / 2;
+phidiff11 = phi - phi1;
+if(Math.abs(phidiff11)<=.05*Math.abs(phi11)){
+phicount1++; }
+
+energycount1 = 0;
+energy11 = (energyy + energy1) / 2;
+energydiff11 = energyy - energy1;
+if(Math.abs(energydiff11)<=.05*Math.abs(energy11)){
+energycount1++; }
+
+momentumcount1 = 0;
+momentum11 = (momentum + momentum1) / 2;
+momentumdiff11 = momentum - momentum1;
+if(Math.abs(momentumdiff11)<=.05*Math.abs(momentum11)){
+momentumcount1++; }
+//if(count==10){ break; }
+
+if(thetacount>=1&&phicount>=1&&energycount>=1&&momentumcount>=1) {
+counter++; }
+if(thetacount0>=1&&phicount0>=1&&energycount0>=1&&momentumcount0>=1) {
+counter0++; }
+if(thetacount1>=1&&phicount1>=1&&energycount1>=1&&momentumcount1>=1) {
+counter1++; }
+
+//if(counter!=counter1){ 
+//mclund.show();
+//mcpart.show(); //}
+if(counter==counter1) {
+//for mcpart and mclund truth matching //?????????????????????????
+ if(Omega_filter.isValid(physEvent)==true){
+     hPi0_Inv.fill(Pi0.mass()); 
+     hPis_Inv.fill(Piplusminus.mass());
+     hDalitz.fill(Dalitzplusminus.mass2(), Dalitzpluszero.mass2());
+     hOmega_Inv.fill(Omega.mass());
+     vPi0.add(vPiplus);  
+     vPi0.add(vPiminus);
+     hOmega_Inv_alternate.fill(vPi0.mass());
+}
+
+//WHICH BANK??????
+}
+}
+//----------------------------------------------------------------------
+// Divide TCanvases and draw histograms in them.
+W.divide(2,2);
+W.cd(0).draw(hPi0_Inv);
+W.cd(1).draw(hPis_Inv);
+W.cd(2).draw(hOmega_Inv);
+W.cd(3).draw(hOmega_Inv_alternate);
+
