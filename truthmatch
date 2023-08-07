@@ -293,7 +293,11 @@ if(thetacount0>=1&&phicount0>=1&&energycount0>=1&&momentumcount0>=1) {
 counter0++; }
 if(thetacount1>=1&&phicount1>=1&&energycount1>=1&&momentumcount1>=1) {
 counter1++; }
-}
+
+//if(counter!=counter1){ 
+//mclund.show();
+//mcpart.show(); }
+//}
 double percentage = counter*100 / count;
 double percentage0 = counter0*100 / count;
 double percentage1 = counter1*100 / count;
