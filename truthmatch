@@ -299,11 +299,6 @@ counter1++; }
 //mcpart.show(); 
 //}
 
-//if(counter==counter1){
-//mclund.show();
-//mcpart.show(); 
-//}
-
 //if(count==10){ 
 //break; 
 //}
