@@ -99,9 +99,11 @@ while(reader.hasNext()==true){
       if(mclund.getRows()>4){ 
           for(int row = 0; row < mclund.getRows(); row++){
               int pid = mclund.getInt("pid",row);
+              byte type = mclund.getByte("type",row);
                   mclundList.add(pid);     
 
       	if(pid==11){
+            if(type!=11){
          	electron.setPxPyPzE(
              	  mclund.getFloat("px",row),
               	mclund.getFloat("py",row),
@@ -111,6 +113,7 @@ while(reader.hasNext()==true){
                 phi = electron.phi()*(180/3.1415);
                 energyy = electron.e();
                 momentum = electron.p(); }
+}
 }
 }
 System.out.println("MC::Lund: ");
