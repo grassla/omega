@@ -285,7 +285,7 @@ System.out.println("**Momentum: **");
 System.out.println("Avg " + momentum11 + " Diff " + Math.abs(momentumdiff11));
 System.out.println("True? " + momentumcount1);
 System.out.println("-------------------------------------------------------------------------------------------------------");
-//if(count==10){ break; }
+
 
 if(thetacount>=1&&phicount>=1&&energycount>=1&&momentumcount>=1) {
 counter++; }
@@ -296,8 +296,18 @@ counter1++; }
 
 //if(counter!=counter1){ 
 //mclund.show();
-//mcpart.show(); }
+//mcpart.show(); 
 //}
+
+//if(counter==counter1){
+//mclund.show();
+//mcpart.show(); 
+//}
+
+//if(count==10){ 
+//break; 
+//}
+}
 double percentage = counter*100 / count;
 double percentage0 = counter0*100 / count;
 double percentage1 = counter1*100 / count;
