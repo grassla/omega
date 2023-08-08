@@ -103,7 +103,7 @@ while(reader.hasNext()==true){
                   mclundList.add(pid);     
 
       	if(pid==11){
-            if(type!=11){
+            if(type==1){
          	electron.setPxPyPzE(
              	  mclund.getFloat("px",row),
               	mclund.getFloat("py",row),
