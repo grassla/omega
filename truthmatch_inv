@@ -113,6 +113,8 @@ while(reader.hasNext()==true){
       event.read(mclund);
       PhysicsEvent physEvent = DataManager.getPhysicsEvent(10.6,mclund);
       if(mclund.getRows()>4){     
+          for(int row = 0; row < mclund.getRows(); row++){
+              int pid = mclund.getInt("pid",row);
       	if(pid==11){
          	electron.setPxPyPzE(
              	  mclund.getFloat("px",row),
@@ -123,7 +125,7 @@ while(reader.hasNext()==true){
                 phi = electron.phi()*(180/3.1415);
                 energyy = electron.e();
                 momentum = electron.p(); }
-}
+} }
 event.read(mcpart);
 mcpartList.clear();
 PhysicsEvent physEvent1 = DataManager.getPhysicsEvent(10.6,mcpart);
@@ -139,7 +141,9 @@ PhysicsEvent physEvent1 = DataManager.getPhysicsEvent(10.6,mcpart);
      LorentzVector vPiplusminus1 = physEvent1.getParticle("[211] + [-211]").vector();
      Particle Dalitzplusminus1 = physEvent1.getParticle("[211] + [-211]");
      Particle Dalitzpluszero1 = physEvent1.getParticle("[211] + [22,0] + [22,1]");
-      if(mcpart.getRows()>4){     
+      if(mcpart.getRows()>4){  
+          for(int row = 0; row < mcpart.getRows(); row++){
+              int pid = mcpart.getInt("pid",row);
       	if(pid==11){
          	electron1.setPxPyPzM(
              	  mcpart.getFloat("px",row),
@@ -150,7 +154,7 @@ PhysicsEvent physEvent1 = DataManager.getPhysicsEvent(10.6,mcpart);
                 phi1 = electron1.phi()*(180/3.1415);
                 energy1 = electron1.e();
                 momentum1 = electron1.p(); }
-}
+} }
 count++;
 
 thetacount = 0;
