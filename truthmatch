@@ -269,6 +269,7 @@ thetadiff11 = theta - theta1;
 hThetaMatch.fill(Math.abs(thetadiff11) / Math.abs(theta11));
 if(Math.abs(thetadiff11)<=.05*Math.abs(theta11)){
 thetacount1++; }
+else { System.out.println("% above 5%: " + (Math.abs(thetadiff11) / Math.abs(theta11))); }
 System.out.println("**Theta: **");
 System.out.println("Avg " + theta11 + " Diff " + Math.abs(thetadiff11));
 System.out.println("True? " + thetacount1);
@@ -279,6 +280,7 @@ phidiff11 = phi - phi1;
 hPhiMatch.fill(Math.abs(phidiff11) / Math.abs(phi11));
 if(Math.abs(phidiff11)<=.05*Math.abs(phi11)){
 phicount1++; }
+else { System.out.println("% above 5%: " + (Math.abs(phidiff11) / Math.abs(phi11))); }
 System.out.println("**Phi: **");
 System.out.println("Avg " + phi11 + " Diff " + Math.abs(phidiff11));
 System.out.println("True? " + phicount1);
@@ -289,6 +291,7 @@ energydiff11 = energyy - energy1;
 hEnergyMatch.fill(energydiff11 / energy11);
 if(Math.abs(energydiff11)<=.05*Math.abs(energy11)){
 energycount1++; }
+else { System.out.println("% above 5%: " + (Math.abs(energydiff11) / Math.abs(energy11))); }
 System.out.println("**Energy: **");
 System.out.println("Avg " + energy11 + " Diff " + Math.abs(energydiff11));
 System.out.println("True? " + energycount1);
@@ -299,6 +302,7 @@ momentumdiff11 = momentum - momentum1;
 hMomentumMatch.fill(momentumdiff11 / momentum11);
 if(Math.abs(momentumdiff11)<=.05*Math.abs(momentum11)){
 momentumcount1++; }
+else { System.out.println("% above 5%: " + (Math.abs(momentumdiff11) / Math.abs(momentum11))); }
 System.out.println("**Momentum: **");
 System.out.println("Avg " + momentum11 + " Diff " + Math.abs(momentumdiff11));
 System.out.println("True? " + momentumcount1);
@@ -311,6 +315,9 @@ if(thetacount0>=1&&phicount0>=1&&energycount0>=1&&momentumcount0>=1) {
 counter0++; }
 if(thetacount1>=1&&phicount1>=1&&energycount1>=1&&momentumcount1>=1) {
 counter1++; }
+else { 
+mclund.show();
+mcpart.show(); }
 
 //if(counter!=counter1){ 
 //mclund.show();
