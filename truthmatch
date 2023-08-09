@@ -23,6 +23,17 @@ Event 	event = new Event();
 Bank  mclund = new Bank(reader.getSchemaFactory().getSchema("MC::Lund"));
 Bank recpart = new Bank(reader.getSchemaFactory().getSchema("REC::Particle"));
 Bank mcpart = new Bank(reader.getSchemaFactory().getSchema("MC::Particle"));
+
+//----------------------------------------------------------------------
+TCanvas TruthMatch = new TCanvas("TruthMatch",800,800);
+H1F  hThetaMatch = new H1F("hThetaMatch" ,100, 0.0, 10.0);
+hThetaMatch.setTitleX("Percentage Theta Match");
+H1F  hPhiMatch = new H1F("hPhiMatch" ,100, 0.0, 10.0);
+hPhiMatch.setTitleX("Percentage Phi Match");
+H1F  hMomentumMatch = new H1F("hMomentumMatch" ,100, 0.0, 10.0);
+hMomentumMatch.setTitleX("Percentage Momentum Match");
+H1F  hEnergyMatch = new H1F("hEnergyMatch" ,100, 0.0, 10.0);
+hEnergyMatch.setTitleX("Percentage Energy Match");
 //----------------------------------------------------------------------
 // Create Lorentz Vectors.
 LorentzVector  vBeam   = new LorentzVector(0.0,0.0,10.6,10.6);
@@ -255,6 +266,7 @@ System.out.println("<><><><>MC::Particle and MC::Lund Truth Matching<><><><>");
 thetacount1 = 0;
 theta11 = (Math.abs(theta) + Math.abs(theta1)) / 2;
 thetadiff11 = theta - theta1;
+hThetaMatch.fill(Math.abs(thetadiff11) / Math.abs(theta11));
 if(Math.abs(thetadiff11)<=.05*Math.abs(theta11)){
 thetacount1++; }
 System.out.println("**Theta: **");
@@ -264,6 +276,7 @@ System.out.println("True? " + thetacount1);
 phicount1 = 0;
 phi11 = (Math.abs(phi) + Math.abs(phi1)) / 2;
 phidiff11 = phi - phi1;
+hPhiMatch.fill(Math.abs(phidiff11) / Math.abs(phi11));
 if(Math.abs(phidiff11)<=.05*Math.abs(phi11)){
 phicount1++; }
 System.out.println("**Phi: **");
@@ -273,6 +286,7 @@ System.out.println("True? " + phicount1);
 energycount1 = 0;
 energy11 = (energyy + energy1) / 2;
 energydiff11 = energyy - energy1;
+hEnergyMatch.fill(energydiff11 / energy11);
 if(Math.abs(energydiff11)<=.05*Math.abs(energy11)){
 energycount1++; }
 System.out.println("**Energy: **");
@@ -282,6 +296,7 @@ System.out.println("True? " + energycount1);
 momentumcount1 = 0;
 momentum11 = (momentum + momentum1) / 2;
 momentumdiff11 = momentum - momentum1;
+hMomentumMatch.fill(momentumdiff11 / momentum11);
 if(Math.abs(momentumdiff11)<=.05*Math.abs(momentum11)){
 momentumcount1++; }
 System.out.println("**Momentum: **");
@@ -316,3 +331,10 @@ System.out.println("# Matching Events Across All Variables: " + String.format("%
 System.out.println("MC::Particle and MC::Lund");
 System.out.println("# Matching Events Across All Variables: " + String.format("%.0f", counter1) + " of " + String.format("%.0f", count) + " events (" + String.format("%.2f", percentage1) + " %) ");
 
+//----------------------------------------------------------------------
+// Divide TCanvases and draw histograms in them.
+TruthMatch.divide(2,2);
+TruthMatch.cd(0).draw(hThetaMatch);
+TruthMatch.cd(1).draw(hPhiMatch);
+TruthMatch.cd(2).draw(hEnergyMatch);
+TruthMatch.cd(3).draw(hMomentumMatch);
