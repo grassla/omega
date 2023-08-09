@@ -95,6 +95,10 @@ double phidiff11 = 0;
 double momentumdiff11 = 0;
 double energydiff11 = 0;
 double counter1 = 0;
+byte mclund_type = 0;
+boolean goodmcpart = false;
+boolean goodmclund = false;
+boolean goodrecpart = false;
 //----------------------------------------------------------------------
 //EventFilter  omega = new EventFilter("211:-211:22:22:X+:X-:Xn");
 reader.getEvent(event,0);  
@@ -103,6 +107,9 @@ List<Integer> recpartList = new ArrayList<>();
 List<Integer> mcpartList = new ArrayList<>();
 count = 0;
 while(reader.hasNext()==true){
+      goodmcpart = false;
+      goodmclund = false;
+      goodrecpart = false;
       mclundList.clear();
       reader.nextEvent(event);
       event.read(mclund);
@@ -111,10 +118,10 @@ while(reader.hasNext()==true){
           for(int row = 0; row < mclund.getRows(); row++){
               int pid = mclund.getInt("pid",row);
               byte type = mclund.getByte("type",row);
+              byte parent = mclund.getByte("parent",row);
                   mclundList.add(pid);     
 
-      	if(pid==11){
-            if(type==1){
+      	if(pid==11&&type==1&&parent==1){
          	electron.setPxPyPzE(
              	  mclund.getFloat("px",row),
               	mclund.getFloat("py",row),
@@ -123,14 +130,16 @@ while(reader.hasNext()==true){
                 theta = electron.theta()*(180/3.1415);
                 phi = electron.phi()*(180/3.1415);
                 energyy = electron.e();
-                momentum = electron.p(); }
+                momentum = electron.p(); 
+                mclund_type = type;
+                goodmclund = true;
 }
 }
 }
-System.out.println("MC::Lund: ");
-System.out.println("Particle List: " + mclundList);
-System.out.println("Theta " + theta + " Phi " + phi + " Energy " + energyy + " Momentum " + momentum);
-System.out.println("");
+//System.out.println("MC::Lund: ");
+//System.out.println("Particle List: " + mclundList);
+//System.out.println("Theta " + theta + " Phi " + phi + " Energy " + energyy + " Momentum " + momentum);
+//System.out.println("");
 event.read(recpart);
 recpartList.clear();
 //PhysicsEvent physEvent0 = DataManager.getPhysicsEvent(10.6,recpart);
@@ -147,13 +156,14 @@ recpartList.clear();
                 theta0 = electron0.theta()*(180/3.1415);
                 phi0 = electron0.phi()*(180/3.1415);
                 energy0 = electron0.e();
-                momentum0 = electron0.p(); }
+                momentum0 = electron0.p(); 
+                goodrecpart = true; }
 }
 }
-System.out.println("REC::Particle: ");
-System.out.println("Particle List: " + recpartList);
-System.out.println("Theta " + theta0 + " Phi " + phi0 + " Energy " + energy0 + " Momentum " + momentum0);
-System.out.println("");
+//System.out.println("REC::Particle: ");
+//System.out.println("Particle List: " + recpartList);
+//System.out.println("Theta " + theta0 + " Phi " + phi0 + " Energy " + energy0 + " Momentum " + momentum0);
+//System.out.println("");
 
 event.read(mcpart);
 mcpartList.clear();
@@ -171,108 +181,114 @@ mcpartList.clear();
                 theta1 = electron1.theta()*(180/3.1415);
                 phi1 = electron1.phi()*(180/3.1415);
                 energy1 = electron1.e();
-                momentum1 = electron1.p(); }
+                momentum1 = electron1.p(); 
+
+                goodmcpart = true; 
+                break; }
 }
 }
 count++;
-System.out.println("MC::Particle: ");
-System.out.println("Particle List: " + mcpartList);
-System.out.println("Theta " + theta1 + " Phi " + phi1 + " Energy " + energy1 + " Momentum " + momentum1);
-System.out.println("");
-System.out.println("<><><><>MC::Particle and REC::Particle Truth Matching<><><><>");
+if(goodrecpart&&goodmcpart) {
+
+//System.out.println("MC::Particle: ");
+//System.out.println("Particle List: " + mcpartList);
+//System.out.println("Theta " + theta1 + " Phi " + phi1 + " Energy " + energy1 + " Momentum " + momentum1);
+//System.out.println("");
+//System.out.println("<><><><>MC::Particle and REC::Particle Truth Matching<><><><>");
 
 thetacount = 0;
 theta01 = (Math.abs(theta1) + Math.abs(theta0)) / 2;
 thetadiff01 = theta1 - theta0;
 if(Math.abs(thetadiff01)<=.05*Math.abs(theta01)){
 thetacount++; }
-System.out.println("**Theta: **");
-System.out.println("Avg " + theta01 + " Diff " + Math.abs(thetadiff01));
-System.out.println("True? " + thetacount);
+//System.out.println("**Theta: **");
+//System.out.println("Avg " + theta01 + " Diff " + Math.abs(thetadiff01));
+//System.out.println("True? " + thetacount);
 
 phicount = 0;
 phi01 = (Math.abs(phi1) + Math.abs(phi0)) / 2;
 phidiff01 = phi1 - phi0;
 if(Math.abs(phidiff01)<=.05*Math.abs(phi01)){
 phicount++; }
-System.out.println("**Phi: **");
-System.out.println("Avg " + phi01 + " Diff " + Math.abs(phidiff01));
-System.out.println("True? " + phicount);
+//System.out.println("**Phi: **");
+//System.out.println("Avg " + phi01 + " Diff " + Math.abs(phidiff01));
+//System.out.println("True? " + phicount);
 
 energycount = 0;
 energy01 = (energy1 + energy0) / 2;
 energydiff01 = energy1 - energy0;
 if(Math.abs(energydiff01)<=.05*Math.abs(energy01)){
-energycount++; }
-System.out.println("**Energy: **");
-System.out.println("Avg " + energy01 + " Diff " + Math.abs(energydiff01));
-System.out.println("True? " + energycount);
+energycount++; } 
+//System.out.println("**Energy: **");
+//System.out.println("Avg " + energy01 + " Diff " + Math.abs(energydiff01));
+//System.out.println("True? " + energycount);
 
 momentumcount = 0;
 momentum01 = (momentum1 + momentum0) / 2;
 momentumdiff01 = momentum1 - momentum0;
 if(Math.abs(momentumdiff01)<=.05*Math.abs(momentum01)){
 momentumcount++; }
-System.out.println("**Momentum: **");
-System.out.println("Avg " + momentum01 + " Diff " + Math.abs(momentumdiff01));
-System.out.println("True? " + momentumcount);
+//System.out.println("**Momentum: **");
+//System.out.println("Avg " + momentum01 + " Diff " + Math.abs(momentumdiff01));
+//System.out.println("True? " + momentumcount);
 
+}
 
-
-System.out.println("");
-System.out.println("<><><><>REC::Particle and MC::Lund Truth Matching<><><><>");
-
+//System.out.println("");
+//System.out.println("<><><><>REC::Particle and MC::Lund Truth Matching<><><><>");
+if(goodrecpart&&goodmclund) {
 thetacount0 = 0;
-theta00 = (Math.abs(theta) + Math.abs(theta0)) / 2;
+theta00 = (Math.abs(theta) + Math.abs(theta0)) / 2; 
 thetadiff00 = theta - theta0;
 if(Math.abs(thetadiff00)<=.05*Math.abs(theta00)){
 thetacount0++; }
-System.out.println("**Theta: **");
-System.out.println("Avg " + theta00 + " Diff " + Math.abs(thetadiff00));
-System.out.println("True? " + thetacount0);
+//System.out.println("**Theta: **");
+//System.out.println("Avg " + theta00 + " Diff " + Math.abs(thetadiff00));
+//System.out.println("True? " + thetacount0);
 
 phicount0 = 0;
 phi00 = (Math.abs(phi) + Math.abs(phi0)) / 2;
 phidiff00 = phi - phi0;
 if(Math.abs(phidiff00)<=.05*Math.abs(phi00)){
 phicount0++; }
-System.out.println("**Phi: **");
-System.out.println("Avg " + phi00 + " Diff " + Math.abs(phidiff00));
-System.out.println("True? " + phicount0);
+//System.out.println("**Phi: **");
+//System.out.println("Avg " + phi00 + " Diff " + Math.abs(phidiff00));
+//System.out.println("True? " + phicount0);
 
 energycount0 = 0;
 energy00 = (energyy + energy0) / 2;
 energydiff00 = energyy - energy0;
 if(Math.abs(energydiff00)<=.05*Math.abs(energy00)){
 energycount0++; }
-System.out.println("**Energy: **");
-System.out.println("Avg " + energy00 + " Diff " + Math.abs(energydiff00));
-System.out.println("True? " + energycount0);
+//System.out.println("**Energy: **");
+//System.out.println("Avg " + energy00 + " Diff " + Math.abs(energydiff00));
+//System.out.println("True? " + energycount0);
 
 momentumcount0 = 0;
 momentum00 = (momentum + momentum0) / 2;
 momentumdiff00 = momentum - momentum0;
 if(Math.abs(momentumdiff00)<=.05*Math.abs(momentum00)){
 momentumcount0++; }
-System.out.println("**Momentum: **");
-System.out.println("Avg " + momentum00 + " Diff " + Math.abs(momentumdiff00));
-System.out.println("True? " + momentumcount0);
+//System.out.println("**Momentum: **");
+//System.out.println("Avg " + momentum00 + " Diff " + Math.abs(momentumdiff00));
+//System.out.println("True? " + momentumcount0);
 
+}
 
-
-System.out.println("");
-System.out.println("<><><><>MC::Particle and MC::Lund Truth Matching<><><><>");
-
+//System.out.println("");
+//System.out.println("<><><><>MC::Particle and MC::Lund Truth Matching<><><><>");
+if(goodmcpart&&goodmclund) {
 thetacount1 = 0;
 theta11 = (Math.abs(theta) + Math.abs(theta1)) / 2;
 thetadiff11 = theta - theta1;
 hThetaMatch.fill(Math.abs(thetadiff11) / Math.abs(theta11));
 if(Math.abs(thetadiff11)<=.05*Math.abs(theta11)){
 thetacount1++; }
-else { System.out.println("% above 5%: " + (Math.abs(thetadiff11) / Math.abs(theta11))); }
-System.out.println("**Theta: **");
-System.out.println("Avg " + theta11 + " Diff " + Math.abs(thetadiff11));
-System.out.println("True? " + thetacount1);
+else { System.out.println("Theta % : " + (Math.abs(thetadiff11) * 100 / Math.abs(theta11))); 
+System.out.println("Difference: " + Math.abs(thetadiff11) + " Mean: " + Math.abs(theta11)); }
+//System.out.println("**Theta: **");
+//System.out.println("Avg " + theta11 + " Diff " + Math.abs(thetadiff11));
+//System.out.println("True? " + thetacount1);
 
 phicount1 = 0;
 phi11 = (Math.abs(phi) + Math.abs(phi1)) / 2;
@@ -280,10 +296,11 @@ phidiff11 = phi - phi1;
 hPhiMatch.fill(Math.abs(phidiff11) / Math.abs(phi11));
 if(Math.abs(phidiff11)<=.05*Math.abs(phi11)){
 phicount1++; }
-else { System.out.println("% above 5%: " + (Math.abs(phidiff11) / Math.abs(phi11))); }
-System.out.println("**Phi: **");
-System.out.println("Avg " + phi11 + " Diff " + Math.abs(phidiff11));
-System.out.println("True? " + phicount1);
+else { System.out.println("Phi % : " + (Math.abs(phidiff11) * 100 / Math.abs(phi11))); 
+System.out.println("Difference: " + Math.abs(phidiff11) + " Mean: " + Math.abs(phi11)); }
+//System.out.println("**Phi: **");
+//System.out.println("Avg " + phi11 + " Diff " + Math.abs(phidiff11));
+//System.out.println("True? " + phicount1);
 
 energycount1 = 0;
 energy11 = (energyy + energy1) / 2;
@@ -291,10 +308,11 @@ energydiff11 = energyy - energy1;
 hEnergyMatch.fill(energydiff11 / energy11);
 if(Math.abs(energydiff11)<=.05*Math.abs(energy11)){
 energycount1++; }
-else { System.out.println("% above 5%: " + (Math.abs(energydiff11) / Math.abs(energy11))); }
-System.out.println("**Energy: **");
-System.out.println("Avg " + energy11 + " Diff " + Math.abs(energydiff11));
-System.out.println("True? " + energycount1);
+else { System.out.println("Energy % : " + (Math.abs(energydiff11) * 100 / Math.abs(energy11))); 
+System.out.println("Difference: " + Math.abs(energydiff11) + " Mean: " + Math.abs(energy11)); }
+//System.out.println("**Energy: **");
+//System.out.println("Avg " + energy11 + " Diff " + Math.abs(energydiff11));
+//System.out.println("True? " + energycount1);
 
 momentumcount1 = 0;
 momentum11 = (momentum + momentum1) / 2;
@@ -302,12 +320,13 @@ momentumdiff11 = momentum - momentum1;
 hMomentumMatch.fill(momentumdiff11 / momentum11);
 if(Math.abs(momentumdiff11)<=.05*Math.abs(momentum11)){
 momentumcount1++; }
-else { System.out.println("% above 5%: " + (Math.abs(momentumdiff11) / Math.abs(momentum11))); }
-System.out.println("**Momentum: **");
-System.out.println("Avg " + momentum11 + " Diff " + Math.abs(momentumdiff11));
-System.out.println("True? " + momentumcount1);
-System.out.println("-------------------------------------------------------------------------------------------------------");
-
+else { System.out.println("Momentum % : " + (Math.abs(momentumdiff11) * 100 / Math.abs(momentum11))); 
+System.out.println("Difference: " + Math.abs(momentumdiff11) + " Mean: " + Math.abs(momentum11)); }
+//System.out.println("**Momentum: **");
+//System.out.println("Avg " + momentum11 + " Diff " + Math.abs(momentumdiff11));
+//System.out.println("True? " + momentumcount1);
+//System.out.println("-------------------------------------------------------------------------------------------------------");
+}
 
 if(thetacount>=1&&phicount>=1&&energycount>=1&&momentumcount>=1) {
 counter++; }
@@ -316,13 +335,12 @@ counter0++; }
 if(thetacount1>=1&&phicount1>=1&&energycount1>=1&&momentumcount1>=1) {
 counter1++; }
 else { 
+//System.out.println("MC::Lund type " + mclund_type);
+System.out.println("ERROR!");
+electron.print();
+electron1.print();
 mclund.show();
 mcpart.show(); }
-
-//if(counter!=counter1){ 
-//mclund.show();
-//mcpart.show(); 
-//}
 
 //if(count==10){ 
 //break; 
@@ -331,13 +349,14 @@ mcpart.show(); }
 double percentage = counter*100 / count;
 double percentage0 = counter0*100 / count;
 double percentage1 = counter1*100 / count;
+System.out.println("----------------------------------------------------------------------");
 System.out.println("MC::Particle and REC::Particle");
 System.out.println("# Matching Events Across All Variables: " + String.format("%.0f", counter) + " of " + String.format("%.0f", count) + " events (" + String.format("%.2f", percentage) + " %) ");
 System.out.println("REC::Particle and MC::Lund");
 System.out.println("# Matching Events Across All Variables: " + String.format("%.0f", counter0) + " of " + String.format("%.0f", count) + " events (" + String.format("%.2f", percentage0) + " %) ");
 System.out.println("MC::Particle and MC::Lund");
 System.out.println("# Matching Events Across All Variables: " + String.format("%.0f", counter1) + " of " + String.format("%.0f", count) + " events (" + String.format("%.2f", percentage1) + " %) ");
-
+System.out.println("----------------------------------------------------------------------");
 //----------------------------------------------------------------------
 // Divide TCanvases and draw histograms in them.
 TruthMatch.divide(2,2);
