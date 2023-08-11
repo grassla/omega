@@ -9,8 +9,8 @@ import org.jlab.clas.physics.*;
 import org.jlab.clas.physics.LorentzVector;
 import org.jlab.clas.physics.PhysicsEvent;
 import org.jlab.clas.physics.Particle;
-import org.jlab.clas.physics.EventFilter;
-import org.jlab.physics.io.DataManager;
+//import org.jlab.clas.physics.EventFilter;
+//import org.jlab.physics.io.DataManager;
 
 
 //@SuppressWarnings("all")
@@ -52,40 +52,15 @@ double theta = 0;
 double phi = 0;
 double energyy = 0;
 double momentum = 0;
-double theta0 = 0;
-double phi0 = 0;
-double energy0 = 0;
-double momentum0 = 0;
 double theta1 = 0;
 double phi1 = 0;
 double energy1 = 0;
 double momentum1 = 0;
-double theta01 = 0;
-double thetadiff01 = 0;
 int thetacount = 0;
-double phi01 = 0;
-double phidiff01 = 0;
 int phicount = 0;
-double momentum01 = 0;
-double momentumdiff01 = 0;
 int momentumcount = 0;
 double counter = 0;
-double energy01 = 0;
-double energydiff01 = 0;
 int energycount = 0;
-int thetacount0 = 0;
-int phicount0 = 0;
-int momentumcount0 = 0;
-int energycount0 = 0;
-double theta00 = 0;
-double phi00 = 0;
-double momentum00 = 0;
-double energy00 = 0;
-double thetadiff00 = 0;
-double phidiff00 = 0;
-double momentumdiff00 = 0;
-double energydiff00 = 0;
-double counter0 = 0;
 int thetacount1 = 0;
 int phicount1 = 0;
 int momentumcount1 = 0;
@@ -100,22 +75,26 @@ double momentumdiff11 = 0;
 double energydiff11 = 0;
 double counter1 = 0;
 //----------------------------------------------------------------------
-//EventFilter  omega = new EventFilter("211:-211:22:22:X+:X-:Xn");
 reader.getEvent(event,0);  
 List<Integer> mclundList = new ArrayList<>();
 List<Integer> recpartList = new ArrayList<>();
 List<Integer> mcpartList = new ArrayList<>();
 count = 0;
-EventFilter  Omega_filter = new EventFilter("11:22:22:211:-211:X+:X-:Xn");
 while(reader.hasNext()==true){
+      goodmcpart = false;
+      goodmclund = false;
+      goodrecpart = false;
       mclundList.clear();
       reader.nextEvent(event);
       event.read(mclund);
-      PhysicsEvent physEvent = DataManager.getPhysicsEvent(10.6,mclund);
-      if(mclund.getRows()>4){     
+      if(mclund.getRows()>4){ 
           for(int row = 0; row < mclund.getRows(); row++){
               int pid = mclund.getInt("pid",row);
-      	if(pid==11){
+              byte type = mclund.getByte("type",row);
+              byte parent = mclund.getByte("parent",row);
+                  mclundList.add(pid);     
+
+      	if(pid==11&&type==1&&parent==1){
          	electron.setPxPyPzE(
              	  mclund.getFloat("px",row),
               	mclund.getFloat("py",row),
@@ -124,26 +103,20 @@ while(reader.hasNext()==true){
                 theta = electron.theta()*(180/3.1415);
                 phi = electron.phi()*(180/3.1415);
                 energyy = electron.e();
-                momentum = electron.p(); }
-} }
+                momentum = electron.p(); 
+                mclund_type = type;
+                goodmclund = true;
+}
+}
+}
+
+
 event.read(mcpart);
 mcpartList.clear();
-PhysicsEvent physEvent1 = DataManager.getPhysicsEvent(10.6,mcpart);
-  Particle Omega1 = physEvent1.getParticle("[22,0]+[22,1]+[211]+[-211]");
-     LorentzVector vOmega1 = physEvent1.getParticle("[22,0]+[22,1]+[211]+[-211]").vector();
-     Particle Piplus1 = physEvent1.getParticle("[211]");
-     LorentzVector vPiplus1 = physEvent1.getParticle("[211]").vector();
-     Particle Piminus1 = physEvent1.getParticle("[-211]");
-     LorentzVector vPiminus1 = physEvent1.getParticle("[-211]").vector();
-     Particle Pi01 = physEvent1.getParticle("[22,0]+[22,1]");
-     LorentzVector vPi01 = physEvent1.getParticle("[22,0]+[22,1]").vector();
-     Particle Piplusminus1 = physEvent1.getParticle("[-211] + [211]");
-     LorentzVector vPiplusminus1 = physEvent1.getParticle("[211] + [-211]").vector();
-     Particle Dalitzplusminus1 = physEvent1.getParticle("[211] + [-211]");
-     Particle Dalitzpluszero1 = physEvent1.getParticle("[211] + [22,0] + [22,1]");
-      if(mcpart.getRows()>4){  
+      if(mcpart.getRows()>4){ 
           for(int row = 0; row < mcpart.getRows(); row++){
               int pid = mcpart.getInt("pid",row);
+                  mcpartList.add(pid);     
       	if(pid==11){
          	electron1.setPxPyPzM(
              	  mcpart.getFloat("px",row),
@@ -153,87 +126,39 @@ PhysicsEvent physEvent1 = DataManager.getPhysicsEvent(10.6,mcpart);
                 theta1 = electron1.theta()*(180/3.1415);
                 phi1 = electron1.phi()*(180/3.1415);
                 energy1 = electron1.e();
-                momentum1 = electron1.p(); }
-} }
+                momentum1 = electron1.p(); 
+                goodmcpart = true; 
+                break; }
+}
+}
 count++;
 
-thetacount = 0;
-theta01 = (Math.abs(theta1) + Math.abs(theta0)) / 2;
-thetadiff01 = theta1 - theta0;
-if(Math.abs(thetadiff01)<=.05*Math.abs(theta01)){
-thetacount++; }
-
-phicount = 0;
-phi01 = (Math.abs(phi1) + Math.abs(phi0)) / 2;
-phidiff01 = phi1 - phi0;
-if(Math.abs(phidiff01)<=.05*Math.abs(phi01)){
-phicount++; }
-
-energycount = 0;
-energy01 = (energy1 + energy0) / 2;
-energydiff01 = energy1 - energy0;
-if(Math.abs(energydiff01)<=.05*Math.abs(energy01)){
-energycount++; }
-
-momentumcount = 0;
-momentum01 = (momentum1 + momentum0) / 2;
-momentumdiff01 = momentum1 - momentum0;
-if(Math.abs(momentumdiff01)<=.05*Math.abs(momentum01)){
-momentumcount++; }
-
+if(goodmcpart&&goodmclund) {
 thetacount1 = 0;
 theta11 = (Math.abs(theta) + Math.abs(theta1)) / 2;
 thetadiff11 = theta - theta1;
 if(Math.abs(thetadiff11)<=.05*Math.abs(theta11)){
 thetacount1++; }
-
 phicount1 = 0;
 phi11 = (Math.abs(phi) + Math.abs(phi1)) / 2;
 phidiff11 = phi - phi1;
 if(Math.abs(phidiff11)<=.05*Math.abs(phi11)){
 phicount1++; }
-
 energycount1 = 0;
 energy11 = (energyy + energy1) / 2;
 energydiff11 = energyy - energy1;
 if(Math.abs(energydiff11)<=.05*Math.abs(energy11)){
 energycount1++; }
-
 momentumcount1 = 0;
 momentum11 = (momentum + momentum1) / 2;
 momentumdiff11 = momentum - momentum1;
 if(Math.abs(momentumdiff11)<=.05*Math.abs(momentum11)){
 momentumcount1++; }
-//if(count==10){ break; }
 
-if(thetacount>=1&&phicount>=1&&energycount>=1&&momentumcount>=1) {
-counter++; }
 if(thetacount1>=1&&phicount1>=1&&energycount1>=1&&momentumcount1>=1) {
-counter1++; }
+counter1++; 
 
-//if(counter!=counter1){ 
-//mclund.show();
-//mcpart.show(); //}
-if(counter==counter1) {
-//for mcpart and mclund truth matching 
- if(Omega_filter.isValid(physEvent)==true){
-     hPi0_Inv.fill(Pi01.mass()); 
-     hPis_Inv.fill(Piplusminus1.mass());
-     //hDalitz.fill(Dalitzplusminus1.mass2(), Dalitzpluszero1.mass2());
-     hOmega_Inv.fill(Omega1.mass());
-     vPi01.add(vPiplus1);  
-     vPi01.add(vPiminus1);
-     hOmega_Inv_alternate.fill(vPi01.mass());
+//Create inv mass using mcpart bank
 }
 
-
 }
-}
-//----------------------------------------------------------------------
-// Divide TCanvases and draw histograms in them.
-W.divide(2,2);
-W.cd(0).draw(hPi0_Inv);
-W.cd(1).draw(hPis_Inv);
-W.cd(2).draw(hOmega_Inv);
-W.cd(3).draw(hOmega_Inv_alternate);
-
