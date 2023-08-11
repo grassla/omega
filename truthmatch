@@ -25,7 +25,7 @@ Bank recpart = new Bank(reader.getSchemaFactory().getSchema("REC::Particle"));
 Bank mcpart = new Bank(reader.getSchemaFactory().getSchema("MC::Particle"));
 
 //----------------------------------------------------------------------
-TCanvas TruthMatch = new TCanvas("TruthMatch",800,800);
+TCanvas TruthMatch = new TCanvas("TruthMatch MC::Lund and MC::Part",800,800);
 H1F  hThetaMatch = new H1F("hThetaMatch" ,100, 0.0, 10.0);
 hThetaMatch.setTitleX("Percentage Theta Match");
 H1F  hPhiMatch = new H1F("hPhiMatch" ,100, 0.0, 10.0);
@@ -34,6 +34,26 @@ H1F  hMomentumMatch = new H1F("hMomentumMatch" ,100, 0.0, 10.0);
 hMomentumMatch.setTitleX("Percentage Momentum Match");
 H1F  hEnergyMatch = new H1F("hEnergyMatch" ,100, 0.0, 10.0);
 hEnergyMatch.setTitleX("Percentage Energy Match");
+
+TCanvas TruthMatch0 = new TCanvas("TruthMatch MC::Lund and REC::Part",800,800);
+H1F  hThetaMatch0 = new H1F("hThetaMatch0" ,100, 0.0, 10.0);
+hThetaMatch0.setTitleX("Percentage Theta Match");
+H1F  hPhiMatch0 = new H1F("hPhiMatch0" ,100, 0.0, 10.0);
+hPhiMatch0.setTitleX("Percentage Phi Match");
+H1F  hMomentumMatch0 = new H1F("hMomentumMatch0" ,100, 0.0, 10.0);
+hMomentumMatch0.setTitleX("Percentage Momentum Match");
+H1F  hEnergyMatch0 = new H1F("hEnergyMatch0" ,100, 0.0, 10.0);
+hEnergyMatch0.setTitleX("Percentage Energy Match");
+
+TCanvas TruthMatch1 = new TCanvas("TruthMatch REC::Part and MC::Part",800,800);
+H1F  hThetaMatch1 = new H1F("hThetaMatch1" ,100, 0.0, 10.0);
+hThetaMatch1.setTitleX("Percentage Theta Match");
+H1F  hPhiMatch1 = new H1F("hPhiMatch1" ,100, 0.0, 10.0);
+hPhiMatch1.setTitleX("Percentage Phi Match");
+H1F  hMomentumMatch1 = new H1F("hMomentumMatch1" ,100, 0.0, 10.0);
+hMomentumMatch1.setTitleX("Percentage Momentum Match");
+H1F  hEnergyMatch1 = new H1F("hEnergyMatch1" ,100, 0.0, 10.0);
+hEnergyMatch1.setTitleX("Percentage Energy Match");
 //----------------------------------------------------------------------
 // Create Lorentz Vectors.
 LorentzVector  vBeam   = new LorentzVector(0.0,0.0,10.6,10.6);
@@ -199,6 +219,7 @@ if(goodrecpart&&goodmcpart) {
 thetacount = 0;
 theta01 = (Math.abs(theta1) + Math.abs(theta0)) / 2;
 thetadiff01 = theta1 - theta0;
+hThetaMatch1.fill(Math.abs(thetadiff01) / Math.abs(theta01));
 if(Math.abs(thetadiff01)<=.05*Math.abs(theta01)){
 thetacount++; }
 //System.out.println("**Theta: **");
@@ -208,6 +229,7 @@ thetacount++; }
 phicount = 0;
 phi01 = (Math.abs(phi1) + Math.abs(phi0)) / 2;
 phidiff01 = phi1 - phi0;
+hPhiMatch1.fill(Math.abs(phidiff01) / Math.abs(phi01));
 if(Math.abs(phidiff01)<=.05*Math.abs(phi01)){
 phicount++; }
 //System.out.println("**Phi: **");
@@ -217,6 +239,7 @@ phicount++; }
 energycount = 0;
 energy01 = (energy1 + energy0) / 2;
 energydiff01 = energy1 - energy0;
+hEnergyMatch1.fill(Math.abs(energydiff01) / Math.abs(energy01));
 if(Math.abs(energydiff01)<=.05*Math.abs(energy01)){
 energycount++; } 
 //System.out.println("**Energy: **");
@@ -226,6 +249,7 @@ energycount++; }
 momentumcount = 0;
 momentum01 = (momentum1 + momentum0) / 2;
 momentumdiff01 = momentum1 - momentum0;
+hMomentumMatch1.fill(Math.abs(momentumdiff01) / Math.abs(momentum01));
 if(Math.abs(momentumdiff01)<=.05*Math.abs(momentum01)){
 momentumcount++; }
 //System.out.println("**Momentum: **");
@@ -240,6 +264,7 @@ if(goodrecpart&&goodmclund) {
 thetacount0 = 0;
 theta00 = (Math.abs(theta) + Math.abs(theta0)) / 2; 
 thetadiff00 = theta - theta0;
+hThetaMatch0.fill(Math.abs(thetadiff00) / Math.abs(theta00));
 if(Math.abs(thetadiff00)<=.05*Math.abs(theta00)){
 thetacount0++; }
 //System.out.println("**Theta: **");
@@ -249,6 +274,7 @@ thetacount0++; }
 phicount0 = 0;
 phi00 = (Math.abs(phi) + Math.abs(phi0)) / 2;
 phidiff00 = phi - phi0;
+hPhiMatch0.fill(Math.abs(phidiff00) / Math.abs(phi00));
 if(Math.abs(phidiff00)<=.05*Math.abs(phi00)){
 phicount0++; }
 //System.out.println("**Phi: **");
@@ -258,6 +284,7 @@ phicount0++; }
 energycount0 = 0;
 energy00 = (energyy + energy0) / 2;
 energydiff00 = energyy - energy0;
+hEnergyMatch0.fill(Math.abs(energydiff00) / Math.abs(energy00));
 if(Math.abs(energydiff00)<=.05*Math.abs(energy00)){
 energycount0++; }
 //System.out.println("**Energy: **");
@@ -267,6 +294,7 @@ energycount0++; }
 momentumcount0 = 0;
 momentum00 = (momentum + momentum0) / 2;
 momentumdiff00 = momentum - momentum0;
+hMomentumMatch0.fill(Math.abs(momentumdiff00) / Math.abs(momentum00));
 if(Math.abs(momentumdiff00)<=.05*Math.abs(momentum00)){
 momentumcount0++; }
 //System.out.println("**Momentum: **");
@@ -364,3 +392,13 @@ TruthMatch.cd(0).draw(hThetaMatch);
 TruthMatch.cd(1).draw(hPhiMatch);
 TruthMatch.cd(2).draw(hEnergyMatch);
 TruthMatch.cd(3).draw(hMomentumMatch);
+TruthMatch0.divide(2,2);
+TruthMatch0.cd(0).draw(hThetaMatch0);
+TruthMatch0.cd(1).draw(hPhiMatch0);
+TruthMatch0.cd(2).draw(hEnergyMatch0);
+TruthMatch0.cd(3).draw(hMomentumMatch0);
+TruthMatch1.divide(2,2);
+TruthMatch1.cd(0).draw(hThetaMatch1);
+TruthMatch1.cd(1).draw(hPhiMatch1);
+TruthMatch1.cd(2).draw(hEnergyMatch1);
+TruthMatch1.cd(3).draw(hMomentumMatch1);
