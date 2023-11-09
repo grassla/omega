@@ -1,0 +1,74 @@
+// Import Libraries
+import org.jlab.jnp.hipo4.io.*;
+import org.jlab.jnp.hipo4.data.*;
+import org.jlab.groot.data.*;
+import org.jlab.groot.graphics.*;
+import org.jlab.groot.math.*;
+import org.jlab.groot.ui.*;
+import org.jlab.clas.physics.*;
+import org.jlab.clas.physics.LorentzVector;
+import org.jlab.clas.physics.PhysicsEvent;
+import org.jlab.clas.physics.Particle;
+import org.jlab.clas.physics.EventFilter;
+import org.jlab.physics.io.DataManager;
+
+
+//@SuppressWarnings("all")
+
+//---------------------------------------------------------------------
+// Create HipoReader object and load in file. Create event class and bank instance.
+HipoReader reader = new HipoReader();
+reader.open("/home/grassla/SimOuts.hipo");
+Event 	event = new Event();
+Bank  mclund = new Bank(reader.getSchemaFactory().getSchema("MC::Lund"));
+Bank recpart = new Bank(reader.getSchemaFactory().getSchema("REC::Particle"));
+Bank mcpart = new Bank(reader.getSchemaFactory().getSchema("MC::Particle"));
+//----------------------------------------------------------------------
+// Variables.
+int counter = 0;
+int count = 0;
+int counter0 = 0;
+int gammacount = 0;
+//----------------------------------------------------------------------
+EventFilter  omega = new EventFilter("11:211:-211:22:22:X+:X-:Xn");
+EventFilter gammas = new EventFilter("11:22:22:22:X+:X-:Xn");
+reader.getEvent(event,0);  
+List<Integer> mclundList = new ArrayList<>();
+List<Integer> recpartList = new ArrayList<>();
+List<Integer> mcpartList = new ArrayList<>();
+count = 0;
+counter = 0;
+count0 = 0;
+gammacount = 0;
+while(reader.hasNext()==true){
+      reader.nextEvent(event);
+      event.read(recpart);
+mcpartList.clear();
+PhysicsEvent physEvent0 = DataManager.getPhysicsEvent(10.6,recpart);
+     if(omega.isValid(physEvent0)==true){
+          for(int i = 0; i < recpart.getRows(); i++) {
+          int pid = recpart.getInt("pid",i);
+                  recpartList.add(pid); 
+                  
+}
+counter++;
+}
+        if(gammas.isValid(physEvent0==true){
+            gammacount++; }
+//System.out.println("REC::Particle: " + recpartList);
+//event.read(mcpart);
+//mcpartList.clear();
+//PhysicsEvent physEvent1 = DataManager.getPhysicsEvent(10.6,mcpart);
+  //    if(mcpart.getRows()>4){ 
+    //      for(int row = 0; row < mcpart.getRows(); row++){
+      //       int pid = mcpart.getInt("pid",row);
+         //         mcpartList.add(pid);                 
+//}
+//counter0++;
+//}
+//System.out.println("MC::Particle: " + mcpartList);
+count++;
+}
+//System.out.println("Events with electron, pi+, pi-, pi0 in MC::Particle: " + counter + " of " + count + " events.");
+System.out.println("Events with electron, pi+, pi-, pi0 in REC::Particle: " + counter0 + " of " + count + " events.");
+System.out.println("Events with electron and 3 gammas in REC::Particle: " + counter0 + " of " + count + " events.");
